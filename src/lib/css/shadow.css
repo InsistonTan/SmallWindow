@@ -1,0 +1,71 @@
+
+/* 从右边飞入动画 */
+@keyframes fly_in {
+    0% {
+       margin-left: 100%;
+    }
+    50% {
+        margin-left: -10%;
+    }
+    100% {
+        margin-left: 0%;
+    }
+  }
+/* 弹出框的过渡动画 */
+.myModal-enter-active{
+    /* transition: all 0.7s; */
+    animation: fly_in 0.7s;
+}
+.myModal-leave-active {
+    /* transition: all 0.3s; */
+    animation: fly_in 0.3s reverse;
+}
+
+/* .myModal-enter{
+    margin-left: 100%;
+}
+.myModal-leave-to {
+    margin-left: 100%;
+} */
+
+/* 遮罩div的过渡动画 */
+.over-enter-active,.over-leave-active{
+    transition: all 0.3s;
+}
+.over-enter,.over-leave-to{
+    opacity: 0;
+   
+}
+
+/* 去掉按钮的点击边框 */
+.mbtn:focus,.mbtn:active:focus,.mbtn.active:focus,.mbtn.focus,.mbtn:active.focus,.mbtn.active.focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow:none;
+}
+/* 鼠标 hover 显示阴影 */
+.font_shadow{
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+.font_shadow:hover{
+    color: rgb(205,133,63);
+    /* text-shadow: 2px 2px 2px #888888; */
+}
+.shadow_div{
+    box-shadow:0px 0px 5px rgb(230,230,230);
+    transform: translate3d(0,0,0);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s; 
+}
+.shadow_div:hover{
+    box-shadow:0px 0px 10px #888888;
+}
+/* 圆角 */
+.round{
+    border-radius: 8px;
+}
+/* 边框阴影 */
+/* .border_shadow{
+    border: 2px groove rgba(240,240,240,0.5);
+} */
