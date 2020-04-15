@@ -19,7 +19,7 @@
             </div>
             <div>
                 <span class="sc_reply" @click="reply(data.username)">回复</span>
-                <span class="sc_reply" @click="deleteComment(data);data.id=null;">删除</span>
+                <span class="sc_reply" @click="deleteComment(data);data.id=null;" v-if="login_uid==data.uid||msg_uid==login_uid">删除</span>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@ export default {
     props:['comments','msg_uid','login_uid'],
     data(){
         return{
-
+            //1
         }
     },
     methods:{
