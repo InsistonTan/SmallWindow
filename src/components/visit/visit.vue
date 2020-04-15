@@ -253,10 +253,10 @@ export default {
 
 <style>
     body {
-        background: none;
-        background-image: linear-gradient(to bottom right, #CDC9A5, #FFFFF0);
+        background: rgb(245,245,245);
+        /* background-image: linear-gradient(to bottom right, #CDC9A5, #FFFFF0);
         background-repeat: no-repeat;
-        background-attachment: fixed;
+        background-attachment: fixed; */
     }
     .edit_link{
         color:dodgerblue;

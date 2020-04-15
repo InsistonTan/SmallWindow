@@ -55,13 +55,13 @@
             <div style="margin-left:10px;margin-right: 10px;margin-top:10px;float: left;">
                 <h6 style="text-align:center;">账号登陆</h6>
                 <!-- 用户名和密码的输入框 -->
-                <input type="text" v-model="input_username" class="form-control username shadow_div" placeholder="用户名/UID">
-                <input type="password" v-model="input_password" class="form-control password shadow_div" placeholder="密码">
+                <input type="text" v-model="input_username" class="form-control username " placeholder="用户名/UID">
+                <input type="password" v-model="input_password" class="form-control password " placeholder="密码">
                 <!-- 验证码画布 -->
                 <!-- <canvas id="codecanvas" class="codecanvas" height="40" width="80" v-on:click="creatCode"></canvas> -->
                 <VerificationCode width="80" height="40" v-on:getCode="v_code = $event" v-if="showCode==true"></VerificationCode>
 
-                <input type="text" v-model="input_code" class="form-control inputcode shadow_div" placeholder="验证码" @keydown.enter="login">
+                <input type="text" v-model="input_code" class="form-control inputcode" placeholder="验证码" @keydown.enter="login">
                 <!-- 展示登陆结果 -->
                 <p id="result" style="color: rgb(240,0,0);font-size:12px;margin-left:2px;">{{login_result}}</p>
                 <button type="button" class="btn btn-primary btn-login" v-on:click="login">登陆</button>
@@ -200,9 +200,9 @@ export default {
 @import url("../lib/css/index.css");
 
 body {
-    background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
+    background: rgb(245,245,245);
+    /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
     background-repeat: no-repeat;
-    background-attachment: fixed;   
-    /* background-color: rgb(245,245,245); */
+    background-attachment: fixed;    */
 }
 </style>

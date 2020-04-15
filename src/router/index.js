@@ -5,6 +5,7 @@ import Register from '@/components/register'
 import Home from '@/components/home/home'
 import Search from '@/components/search/search'
 import Visit from '@/components/visit/visit';
+import ViewMsg from '@/components/viewMsg/viewMsg';
 Vue.use(Router)
 
 export default new Router({
@@ -33,6 +34,11 @@ export default new Router({
       path: '/Visit/',
       name: 'Visit',
       component: Visit
+    },
+    {
+      path: '/ViewMsg/',
+      name: 'ViewMsg',
+      component: ViewMsg
     }
   ]
 })

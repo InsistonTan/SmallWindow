@@ -1,8 +1,7 @@
 <template>
 <div>
-
-    <div class='rounded message_div ' v-for="data in messages" v-bind:key="data.index" >
-        <div class="clickMsg_div" @click="seeMessage(data.uid,data.index)">
+    <div class='rounded message_div shadow_div' v-for="data in messages" v-bind:key="data.index" >
+        <div class="clickMsg_div" @click="seeMessage(data)">
             <div id='Username' style='font-size:16px;margin-left:10px;padding-top:6px;'>
                 <img src='../../assets/user2.png' alt='account' style='width: 18px;height: 18px;'>
                 <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" class='font_shadow' style='color:rgb(205,133,63);text-decoration:none;margin-left:2px;'>
@@ -19,8 +18,9 @@
             <div id='time' style='font-size:10px;margin-left:10px;'>
                 {{data.time}}
             </div>
-            <div id='content' style='margin:10px;font-size:14px;'>
-                {{data.content}}
+            <div id='content' style='margin:10px;font-size:14px;word-wrap: break-word;word-break: break-all;'>
+                {{data.content.substr(0,[200])}}
+                <span v-if="data.content.length>200">...</span>
             </div>
         </div>
         <hr style="height:0px;margin-bottom:6px;margin-top:10px;">
@@ -29,7 +29,7 @@
                 <img src="../../assets/view.png" alt="view" class="foot_img" style="margin-left:10px;">
                 <span>{{data.view}}</span>
             </div>
-            <div class="like" title="点击点赞" @click="click_like(data.liked,data.index);if(data.liked!=1){data.liked=1;data.like++;}else{data.liked=0;data.like--;}">
+            <div class="like" title="点击点赞" @click="click_like(data);if(data.liked!=1){data.liked=1;data.like++;}else{data.liked=0;data.like--;}">
                 <img v-if="data.liked==1" src="../../assets/liked.png" alt="liked" class="foot_img" style="margin-top:-2px;">
                 <img v-else src="../../assets/like.png" alt="like" class="foot_img" style="margin-top:-2px;">
                 <span>{{data.like}}</span>
@@ -38,7 +38,7 @@
                 <img src="../../assets/comment.png" alt="comment" class="foot_img">
                 <span>{{data.comment}}</span>
             </div>
-            <div class="collect" title="点击收藏" @click="click_collect(data.collected,data.index);if(data.collected!=1){data.collected=1;data.collect++;}else{data.collected=0;data.collect--;}">
+            <div class="collect" title="点击收藏" @click="click_collect(data);if(data.collected!=1){data.collected=1;data.collect++;}else{data.collected=0;data.collect--;}">
                 <img v-if="data.collected==1" src="../../assets/collected.png" alt="collected" class="foot_img" style="margin-top:-2px;">
                 <img v-else src="../../assets/collect.png" alt="collect" class="foot_img" style="margin-top:-2px;">
                 <span>{{data.collect}}</span>
@@ -76,7 +76,7 @@ export default {
     },
     methods: {
         //点击收藏按钮
-        click_collect(collected,index){
+        click_collect(data){
             //alert("click_collect");
             if(this.uid==null||this.uid==""){
                 this.title="你还未登陆,请先登陆";
@@ -84,9 +84,11 @@ export default {
                 return;
             }
             else{
-                axios 
+                //收藏
+                if(data.collected!=1){
+                    axios 
                     .post("/api/addCollect",{
-                        "msg_index":index,
+                        "msg_index":data.index,
                         "uid":this.uid
                     })
                     .then(response=>{
@@ -96,12 +98,27 @@ export default {
                     .catch(function(error){
                         console.log(error);
                     });
+                }
+                //取消收藏
+                else{
+                    axios 
+                    .post("/api/cancelCollect",{
+                        "msg_index":data.index
+                    })
+                    .then(response=>{
+                        console.log("cancel_collect-server:"+response.data);
+                        
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    });
+                }
                     
             }
         },
 
         //点击点赞按钮
-        click_like(liked,index){
+        click_like(data){
             //alert("click_like");
             if(this.uid==null||this.uid==""){
                 this.title="你还未登陆,请先登陆";
@@ -109,9 +126,11 @@ export default {
                 return;
             }
             else{
-                axios 
+                //点赞
+                if(data.liked!=1){
+                    axios 
                     .post("/api/addLike",{
-                        "msg_index":index,
+                        "msg_index":data.index,
                         "uid":this.uid
                     })
                     .then(response=>{
@@ -121,15 +140,34 @@ export default {
                     .catch(function(error){
                         console.log(error);
                     });
-                    
+                }
+                //取消点赞
+                else{
+                    axios 
+                    .post("/api/cancelLike",{
+                        "msg_index":data.index
+                    })
+                    .then(response=>{
+                        console.log("cancelike-server:"+response.data);
+                        
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    });
+                }        
             }
         },
 
         //点击帖子，进去帖子详情
-        seeMessage(m_uid, index) {
+        seeMessage(data) {
             //alert("111");
-            if (m_uid == this.uid)
-                return;
+            if (data.uid != this.uid)
+                this.addView(data.index);
+            window.location.href="/#/ViewMsg/?index="+data.index;
+
+        },
+        //增加浏览数
+        addView(index){
             var login_uid;
             if (this.uid == null || this.uid == "")
                 login_uid = "visitor";
@@ -144,7 +182,6 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
-
         },
 
         //
@@ -157,6 +194,8 @@ export default {
         confirm(){
             if(this.title=="确认删除该帖子?")
                 this.deleteMsg();
+            else if(this.title=="正在删除..."||this.title=="删除成功！")
+                this.show_modal=false;
             else if(this.title=="你还未登录,请先登录")
                 window.location.href="/";
         },
@@ -233,7 +272,7 @@ export default {
 
 .message_div {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 1);
     margin-top: 10px;
     transition: all 0.3s;
     -webkit-transition: all 0.3s;

@@ -110,10 +110,11 @@ export default {
 @import url("../../lib/css/search.css");
 
 body {
-    background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
+    background: rgb(245,245,245);
+    /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
     background-repeat: no-repeat;
     background-size: 100% auto;
-    background-attachment: fixed;
+    background-attachment: fixed; */
 }
 .midContent{
     width:40%;

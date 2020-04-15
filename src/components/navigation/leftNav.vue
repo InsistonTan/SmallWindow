@@ -1,7 +1,7 @@
 <template>
 <!-- 副导航栏 -->
 <div class="leftNav_div">
-    <nav class="rounded nav nav-pills fixed-top nav justify-content-center leftNav">
+    <nav class="rounded nav nav-pills fixed-top nav justify-content-center leftNav shadow_div">
         <ul class="navbar-nav nav_item">
             <div>
                 <li class="nav-item">

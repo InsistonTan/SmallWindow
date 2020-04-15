@@ -35,14 +35,15 @@ export default {
     },
     methods:{
         confirm(){
-            if(this.confirm_click==false){
-                this.$emit("confirm");
-                this.confirm_click=true; 
-            }   
-            else {
-                this.close();
-                this.confirm_click=false;
-            }
+            this.$emit("confirm");
+            // if(this.confirm_click==false){
+            //     this.$emit("confirm");
+            //     this.confirm_click=true; 
+            // }   
+            // else {
+            //     this.close();
+            //     this.confirm_click=false;
+            // }
             
         },
         close(){

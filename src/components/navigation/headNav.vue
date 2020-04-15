@@ -152,7 +152,7 @@ export default {
 }
 
 .headNav {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 1);
     transition: background-color 0.5s;
     overflow:hidden;
     box-shadow:0px 0px 5px rgb(220,220,220);

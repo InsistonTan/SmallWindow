@@ -8,21 +8,21 @@
     <div style="width:30%;float:left;height:100%;">
         <!-- 副导航栏 -->
         <div class="leftNav_div">
-            <nav class="rounded nav nav-pills fixed-top nav justify-content-center leftNav">
+            <nav class="rounded nav nav-pills fixed-top nav justify-content-center leftNav shadow_div">
                 <ul class="navbar-nav nav_item">
                     <div>
                         <li class="nav-item">
-                            <a href="#">热门</a>
+                            <a href="#">点赞</a>
                         </li>
                     </div>
                     <div>
                         <li class="nav-item">
-                            <a href="#">热门</a>
+                            <a href="#">评论</a>
                         </li>
                     </div>
                     <div>
                         <li class="nav-item">
-                            <a href="#">热门</a>
+                            <a href="#">收藏</a>
                         </li>
                     </div>
                     <div>
@@ -63,7 +63,7 @@
     </div>
     <!-- 右边展示个人信息的div -->
     <div style="width:30%;float:left;">
-        <div class="rounded infoShow"> 
+        <div class="rounded infoShow shadow_div">
             <div style="text-align:center; padding-top:15px;">
                 <a href="#"><img src="../../assets/bigUser.png" alt="账号图片"></a>
             </div>
@@ -225,6 +225,7 @@ export default {
                 });
         }
     }
+
 }
 </script>
 
@@ -232,26 +233,31 @@ export default {
 @import url("../../lib/css/home.css");
 @import url("../../lib/css/shadow.css");
 @import url("../../lib/css/leftNav.css");
-.input_area{
-    background-color:rgba(255,255,255,0.5);
-    width:100%;
+
+.input_area {
+    background-color: rgba(255, 255, 255, 1);
+    width: 100%;
     transition: all 0.3s;
     -webkit-transition: all 0.3s;
 }
-.input_area:hover{
-    background-color:rgba(255,255,255,0.9);
+
+.input_area:hover {
+    background-color: rgba(255, 255, 255, 14);
 }
-.infoShow{
-    margin:10%;
-    margin-top:20px;
-    margin-left:5.6%;
-    background-color:rgba(255,255,255,0.8);
+
+.infoShow {
+    margin: 10%;
+    margin-top: 20px;
+    margin-left: 5.6%;
+    background-color: rgba(255, 255, 255, 1);
     transition: all 0.3s;
     -webkit-transition: all 0.3s;
 }
-.infoShow:hover{
-    background-color:rgba(255,255,255,1);
+
+.infoShow:hover {
+    background-color: rgba(255, 255, 255, 1);
 }
+
 .btn_submit {
     border: none;
     border-radius: 2px;
@@ -266,15 +272,22 @@ export default {
     background: rgb(162, 107, 53);
     color: rgb(250, 250, 250);
 }
-
-body {
-    /* background-color: rgb(245, 245, 245); */
+/* .home_body{
+    position: absolute;
+    height: 100%;
+    width: 100%;
     background-image: linear-gradient(to bottom right, #F5DEB3, #FFFFF0);
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-attachment: fixed;
-    /* animation: my_animation 16s infinite linear;
+} */
+body {
+    background: rgb(245,245,245);
+    /* background-image: linear-gradient(to bottom right, #F5DEB3, #FFFFF0);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    animation: my_animation 16s infinite linear;
     -webkit-animation: my_animation 32s infinite linear;    */
-}
+} 
 
 @keyframes my_animation {
     0% {
