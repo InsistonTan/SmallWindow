@@ -7,43 +7,8 @@
     <!-- 左边导航栏 -->
     <div style="width:30%;float:left;height:100%;">
         <!-- 副导航栏 -->
-        <div class="leftNav_div">
-            <nav class="rounded nav nav-pills fixed-top nav justify-content-center leftNav shadow_div">
-                <ul class="navbar-nav nav_item">
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">点赞</a>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">评论</a>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">收藏</a>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">热门</a>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">热门</a>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="nav-item">
-                            <a href="#">热门</a>
-                        </li>
-                    </div>
-                </ul>
-            </nav>
-            <p></p>
-        </div>
+        <LeftNav :uid="uid"></LeftNav>
+       <p></p>
     </div>
     <!-- 中间的主体 -->
     <div style="width:40%;float:left;">

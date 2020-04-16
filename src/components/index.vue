@@ -8,7 +8,7 @@
     <!-- 左边导航栏 -->
     <div id="left_div" style="width:30%;float:left;">
         <p> </p>
-        <LeftNav></LeftNav>
+        <LeftNav :uid="null"></LeftNav>
     </div>
     <!-- 中间的div   -->
     <div id="mid_div" style="width:40%;float:left;">

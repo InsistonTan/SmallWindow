@@ -6,6 +6,7 @@ import Home from '@/components/home/home'
 import Search from '@/components/search/search'
 import Visit from '@/components/visit/visit';
 import ViewMsg from '@/components/viewMsg/viewMsg';
+import MultiPage from '@/components/functions/multiPage'
 Vue.use(Router)
 
 export default new Router({
@@ -39,6 +40,11 @@ export default new Router({
       path: '/ViewMsg/',
       name: 'ViewMsg',
       component: ViewMsg
+    },
+    {
+      path: '/MultiPage/',
+      name: 'MultiPage',
+      component: MultiPage
     }
   ]
 })
