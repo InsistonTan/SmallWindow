@@ -62,7 +62,7 @@ export default {
 <style>
     .com_content{
         margin:5px;
-        padding-bottom:5px;
+        padding-bottom:0px;
         word-wrap: break-word;
         word-break: break-all;
     }

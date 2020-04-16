@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class='rounded message_div shadow_div' v-for="data in messages" v-bind:key="data.index" >
-        <div class="clickMsg_div" @click="seeMessage(data)">
+        <div >
             <div id='Username' style='font-size:16px;margin-left:10px;padding-top:6px;'>
                 <img src='../../assets/user2.png' alt='account' style='width: 18px;height: 18px;'>
                 <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" class='font_shadow' style='color:rgb(205,133,63);text-decoration:none;margin-left:2px;'>
@@ -15,13 +15,15 @@
                     <span v-html="">&times</span> 
                 </button> -->
             </div>
-            <div id='time' style='font-size:10px;margin-left:10px;'>
-                {{data.time}}
-            </div>
-            <div id='content' style='margin:10px;font-size:14px;word-wrap: break-word;word-break: break-all;'>
-                {{data.content.substr(0,[200])}}
-                <span v-if="data.content.length>200">...</span>
-            </div>
+            <div class="clickMsg_div" @click="seeMessage(data)" title="点击查看详情">
+                <div id='time' style='font-size:10px;margin-left:10px;'>
+                    {{data.time}}
+                </div>
+                <div id='content' style='margin:10px;font-size:14px;word-wrap: break-word;word-break: break-all;'>
+                    {{data.content.substr(0,[200])}}
+                    <span v-if="data.content.length>200">...</span>
+                </div>
+            </div>      
         </div>
         <hr style="height:0px;margin-bottom:6px;margin-top:10px;">
         <div id="footer" class="foot">
