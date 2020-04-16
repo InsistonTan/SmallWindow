@@ -196,7 +196,7 @@ export default {
                 this.deleteMsg();
             else if(this.title=="正在删除..."||this.title=="删除成功！")
                 this.show_modal=false;
-            else if(this.title=="你还未登录,请先登录")
+            else if(this.title=="你还未登陆,请先登陆")
                 window.location.href="/";
         },
 
