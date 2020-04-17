@@ -22,15 +22,42 @@
             <div style="padding-top:8px;text-align:center;font-size:14px;">
                 <span class="infoText" style="margin-left:-5px;"><b>关注</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{follow_num}}</a></b>
+                    <b v-if="uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFollow'}}" style="text-decoration:none;" class="font_shadow">
+                            {{follow_num}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitFollow',visit_uid:uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{follow_num}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText"><b>粉丝</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{fan_num}}</a></b>
+                    <b v-if="uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFan'}}" style="text-decoration:none;" class="font_shadow">
+                            {{fan_num}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitFan',visit_uid:uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{fan_num}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText"><b>帖子</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{message_num}}</a></b>
+                    <b v-if="uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
+                            {{message_num}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitMsg',visit_uid:uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{message_num}}
+                        </router-link>
+                    </b>
                 </span>
             </div>
             <div id="info" style="font-size:13px;padding-top:5px;">

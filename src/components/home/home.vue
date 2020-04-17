@@ -44,15 +44,24 @@
             <div style="padding-top:5px;text-align:center;padding-bottom:15px;">
                 <span class="infoText">关注</span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;" class="font_shadow">{{follow_num}}</a></b>
+                    <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{follow_num}}</a></b> -->
+                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyFollow'}}" style="text-decoration:none;" class="font_shadow">
+                        {{follow_num}}
+                    </router-link></b>
                 </span>
                 <span class="infoText">粉丝</span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;" class="font_shadow">{{fan_num}}</a></b>
+                    <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{fan_num}}</a></b> -->
+                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyFan'}}" style="text-decoration:none;" class="font_shadow">
+                        {{fan_num}}
+                    </router-link></b>
                 </span>
                 <span class="infoText">帖子</span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;" class="font_shadow">{{message_num}}</a></b>
+                    <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{message_num}}</a></b> -->
+                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
+                        {{message_num}}
+                    </router-link></b>
                 </span>
             </div>
         </div>
