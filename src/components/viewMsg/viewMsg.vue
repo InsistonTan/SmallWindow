@@ -27,15 +27,42 @@
             <div style="padding-top:8px;text-align:center;font-size:14px;">
                 <span class="infoText" style="margin-left:-5px;"><b>关注</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{msg_user.followNum}}</a></b>
+                    <b v-if="message.uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFollow'}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.followNum}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitFollow',visit_uid:message.uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.followNum}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText"><b>粉丝</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{msg_user.fanNum}}</a></b>
+                    <b v-if="message.uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFan'}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.fanNum}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitFan',visit_uid:message.uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.fanNum}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText"><b>帖子</b></span>
                 <span>
-                    <b><a href="#" style="text-decoration:none;">{{msg_user.messageNum}}</a></b>
+                    <b v-if="message.uid==login_uid">
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.messageNum}}
+                        </router-link>
+                    </b>
+                    <b v-else>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeVisitMsg',visit_uid:message.uid}}" style="text-decoration:none;" class="font_shadow">
+                            {{msg_user.messageNum}}
+                        </router-link>
+                    </b>
                 </span>
             </div>
             <div id="info" style="font-size:13px;padding-top:5px;">
@@ -313,7 +340,7 @@ export default {
                 .post("/api/getOneMessage?index=" + this.msg_index)
                 .then(response => {
                     if (response.data != null) {
-                        console.log(response.data);
+                        //console.log(response.data);
                         this.message = response.data;
                         //获取发帖人的个人信息
                         if (response.data.uid != null && response.data.uid != ""){

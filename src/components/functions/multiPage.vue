@@ -16,17 +16,17 @@
                     <span v-if="action=='seeTopMsg'">热门帖子Top10</span>
                    
                     <span v-else-if="action=='seeMyMsg'">我的帖子({{login_user.messageNum}})</span>
-                    <span v-else-if="action=='seeVisitMsg'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span>的帖子({{visit_user.messageNum}})</span>
+                    <span v-else-if="action=='seeVisitMsg'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的帖子({{visit_user.messageNum}})</span>
                     
                     <span v-else-if="action=='seeMyFollow'">我的关注({{login_user.followNum}})</span>
-                    <span v-else-if="action=='seeVisitFollow'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span>的关注({{visit_user.followNum}})</span>
+                    <span v-else-if="action=='seeVisitFollow'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的关注({{visit_user.followNum}})</span>
                     
                     <span v-else-if="action=='seeMyFan'">我的粉丝({{login_user.fanNum}})</span>
-                    <span v-else-if="action=='seeVisitFan'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span>的粉丝({{visit_user.fanNum}})</span>      
+                    <span v-else-if="action=='seeVisitFan'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的粉丝({{visit_user.fanNum}})</span>      
                 </div>
                 <!-- 内容展示 -->
                 <div style="background:rgb(245,245,245);padding:10px;margin-top:-10px;">
-                    <ShowUsers :users="users" :uid="login_uid" v-if="action=='seeMyFollow'||action=='seeMyFan'||action=='seeVisitFan'||action=='seeVisitFollow'"></ShowUsers>
+                    <ShowUsers :users="users" :uid="login_uid" @cancelFollow="cancelFollow" v-if="action=='seeMyFollow'||action=='seeMyFan'||action=='seeVisitFan'||action=='seeVisitFollow'"></ShowUsers>
                     <ShowMessages :messages="message" :uid="login_uid" v-else></ShowMessages>
                 </div>
             </div>
@@ -118,6 +118,10 @@ export default {
                 }
             }
                
+        },
+        //showusers组件取消了一个关注
+        cancelFollow(){
+            this.login_user.followNum--;
         },
         //获取他人的个人信息
         getVisitorInfo(){

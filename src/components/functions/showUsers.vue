@@ -1,17 +1,17 @@
 <template>
 <div>
-    <div class='rounded shadow_div main_div' v-for="user in users" v-bind:key="user.UID">
+    <div class='rounded shadow_div main_div' v-for="user in users" v-bind:key="user.UID" v-if="user.UID!=null">
         <img src='../../assets/user2.png' alt='user' style='margin:4px;'>
         <!-- <b><a href='#' style='text-decoration: none;'>{{user.Username}}</a></b> -->
         <b><router-link :to="{path:'/Visit/',query:{uid:user.UID}}" style="text-decoration:none;">
             {{user.Username}}
         </router-link></b>
         <button type='button' class='btn btn-outline-success btn-sm follow_btn1' v-if="user.isFollowed==0&&user.UID!=uid" 
-                v-on:click='follow(user.UID)'>
+                v-on:click='follow(user.UID);user.isFollowed=1;'>
             关注
         </button>
-        <button type='button' class='btn btn-outline-success btn-sm follow_btn2' v-else disabled>
-            已关注
+        <button type='button' class='btn btn-outline-success btn-sm follow_btn2' @click="cancelFollow(user.UID);user.UID=null;" v-if="user.UID!=uid&&user.isFollowed==1">
+            取消关注
         </button>
     </div>
     <MyModal :show="show_modal" :title="title" @confirm="confirm" @close="close"></MyModal>
@@ -34,6 +34,23 @@ export default {
         }
     },
     methods:{
+        //取消关注
+        cancelFollow(targetUID){
+            axios
+                .post("/api/cancelFollow",{
+                    "targetUID":targetUID
+                })
+                .then(response =>{
+                    console.log("showUser--cancelFollow:"+response.data);
+                    if(response.data=="success"){
+                        this.$emit("cancelFollow");
+                    }    
+                    else alert("取消关注失败");
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //消息框确认
         confirm(){
             this.show_modal=false;
@@ -57,9 +74,9 @@ export default {
                     "targetUID":targetUID
                 })
                 .then(response =>{
-                    if(response.data=="success")
-                        location.reload();
-                    else alert("关注失败");
+                    console.log("showUser--follow:"+response.data);
+                    if(response.data!="success")
+                        alert("关注失败");
                 })
                 .catch(function(error){
                     console.log(error);
@@ -83,7 +100,7 @@ export default {
         margin:6px;
     }
     .follow_btn2{
-        width:60px;
+        width:70px;
         height:26px;
         font-size:11px;
         float:right;
