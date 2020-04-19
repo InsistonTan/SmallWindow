@@ -23,6 +23,10 @@
                     
                     <span v-else-if="action=='seeMyFan'">我的粉丝({{login_user.fanNum}})</span>
                     <span v-else-if="action=='seeVisitFan'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的粉丝({{visit_user.fanNum}})</span>      
+
+                    <span v-else-if="action=='seeMyLikeMsg'">我的点赞({{message.length}})</span>
+                    <span v-else-if="action=='seeMyCollectMsg'">我的收藏({{message.length}})</span>
+                    <span v-else-if="action=='seeMyCommentMsg'">我评论过的帖子({{message.length}})</span>
                 </div>
                 <!-- 内容展示 -->
                 <div style="background:rgb(245,245,245);padding:10px;margin-top:-10px;">
@@ -70,7 +74,7 @@ export default {
                 'fanNum': '0',
                 'messageNum': '0'
             },
-            message: null,
+            message: [],
             users:null,
             login_uid:null,
             showModal:false,
@@ -111,6 +115,12 @@ export default {
                         this.getMyFollow();
                     else if(this.action=="seeMyFan")
                         this.getMyFan();
+                    else if(this.action=="seeMyLikeMsg")
+                        this.getMyLikeMsg();
+                    else if(this.action=="seeMyCollectMsg")
+                        this.getMyCollectMsg();
+                    else if(this.action=="seeMyCommentMsg")
+                        this.getMyCommentMsg();
                 }   
                 else{
                     this.title="你还未登陆，请先登陆";
@@ -118,6 +128,48 @@ export default {
                 }
             }
                
+        },
+
+        //获取登陆者评论过的帖子
+        getMyCommentMsg(){
+            axios   
+                .post("/api/getMyCommentMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.message=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+
+        //获取登陆者的收藏的帖子
+        getMyCollectMsg(){
+            axios   
+                .post("/api/getMyCollectMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.message=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+
+        //获取登陆者的点赞的帖子
+        getMyLikeMsg(){
+            axios   
+                .post("/api/getMyLikeMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.message=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
         },
         //showusers组件取消了一个关注
         cancelFollow(){

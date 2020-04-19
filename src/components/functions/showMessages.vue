@@ -163,8 +163,8 @@ export default {
         //点击帖子，进去帖子详情
         seeMessage(data) {
             //alert("111");
-            if (data.uid != this.uid)
-                this.addView(data.index);
+            //if (data.uid != this.uid)
+            this.addView(data.index);
             window.location.href="/#/ViewMsg/?index="+data.index;
 
         },

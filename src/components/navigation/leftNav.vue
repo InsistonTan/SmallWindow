@@ -39,17 +39,17 @@
         <ul class="navbar-nav nav_item">
             <div>
                 <li class="nav-item">
-                    <a href="#">点赞</a>
+                    <router-link :to="{path:'/MultiPage/',query:{action:'seeMyLikeMsg'}}">点赞</router-link>
                 </li>
             </div>
             <div>
                 <li class="nav-item">
-                    <a href="#">评论</a>
+                    <router-link :to="{path:'/MultiPage/',query:{action:'seeMyCommentMsg'}}">评论</router-link>
                 </li>
             </div>
             <div>
                 <li class="nav-item">
-                    <a href="#">收藏</a>
+                    <router-link :to="{path:'/MultiPage/',query:{action:'seeMyCollectMsg'}}">收藏</router-link>
                 </li>
             </div>
             <div>
