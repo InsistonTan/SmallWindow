@@ -6,15 +6,14 @@
         <HeadNav @getInfo="getInfo($event)"></HeadNav>
     </div>
     <!-- 左边导航栏 -->
-    <div id="left_div" style="width:30%;float:left;">
+    <div id="index_left_div" style="width:30%;float:left;">
         <p> </p>
         <LeftNav :uid="null"></LeftNav>
     </div>
     <!-- 中间的div   -->
-    <div id="mid_div" style="width:40%;float:left;">
+    <div id="index_mid_div">
         <!-- 图片轮播 width: 80%;margin-left:10%;-->
-        <div id="pic" class="carousel slide index_shadow_div" data-ride="carousel" 
-            style="height: 300px;margin-top:20px;">
+        <div id="index_pic" class="carousel slide index_shadow_div" data-ride="carousel">
             <!-- 指示符 -->
             <ul class="carousel-indicators">
                 <li data-target="#pic" data-slide-to="0" class="active"></li>
@@ -22,7 +21,7 @@
                 <li data-target="#pic" data-slide-to="2"></li>
             </ul>
             <!-- 轮播图片 -->
-            <div id="inner-pic" class="carousel-inner" style="height: 300px;width: 100%;">
+            <div id="inner-pic" class="carousel-inner" style="width: 100%;">
                 <div class="carousel-item active">
                     <img src="../assets/1.jpg" class="inner-pic-css rounded img-fluid">
                 </div>
@@ -34,10 +33,10 @@
                 </div>
             </div>
             <!-- 左右切换按钮 -->
-            <a class="carousel-control-prev" href="#pic" data-slide="prev">
+            <a class="carousel-control-prev" href="#index_pic" data-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </a>
-            <a class="carousel-control-next" href="#pic" data-slide="next">
+            <a class="carousel-control-next" href="#index_pic" data-slide="next">
                 <span class="carousel-control-next-icon"></span>
             </a>
         </div>
@@ -49,7 +48,7 @@
         </div>
     </div>
     <!-- 右边登陆内容 -->
-    <div id="right_div" style="width:30%;float:left;">
+    <div id="index_right_div" style="width:30%;float:left;">
 
         <div style="margin-left:5.6%;height:340px;float: left;margin-top:20px;" class="rounded index_shadow_div">
             <div style="margin-left:10px;margin-right: 10px;margin-top:10px;float: left;">
@@ -204,5 +203,30 @@ body {
     /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
     background-repeat: no-repeat;
     background-attachment: fixed;    */
+}
+#index_pic{
+    margin-top:20px;
+}
+#index_mid_div{
+    width:40%;float:left;
+}
+@media only screen and (max-width: 500px){
+    body {
+        background: rgb(245,245,245);
+    }
+    #index_pic{
+        margin-top: -10px;
+    }
+    #index_right_div{
+        display: none;
+    }
+    #index_left_div{
+        display: none;
+    }
+    #index_mid_div{
+        width: 100%;
+        padding: 10px;
+        font-size: 100%;
+    }
 }
 </style>

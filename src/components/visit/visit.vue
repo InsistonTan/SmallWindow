@@ -96,14 +96,14 @@
         </div>
         <!-- 展示帖子div -->
         <div id="bottomDiv">
-            <div id="leftContent" style="width:30%;float:left;">
+            <div id="visit-leftContent" style="width:30%;float:left;">
                 <p> </p>
             </div>
-            <div id="midContent" style="width:40%;float:left;">
+            <div id="visit-midContent">
                 <hr>
                 <ShowMessages :messages="messages" :uid="login_uid" @reload="reload"></ShowMessages>
             </div>
-            <div id="rightContent" style="width:30%;float:left;">
+            <div id="visit-rightContent" style="width:30%;float:left;">
                 <p> </p>
             </div>
         </div>
@@ -316,5 +316,21 @@ export default {
         height: 26px;
         font-size: 11px;
         margin-top: 6px;
+    }
+    #visit-midContent{
+        width:40%;
+        float:left;
+    }
+    @media screen and (max-width: 500px){
+        #visit-leftContent{
+            display: none;
+        }
+        #visit-rightContent{
+            display: none;
+        }
+        #visit-midContent{
+            padding: 10px;
+            width: 100%;
+        }
     }
 </style>

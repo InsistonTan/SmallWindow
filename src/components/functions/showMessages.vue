@@ -19,7 +19,7 @@
                 <div id='time' style='font-size:10px;margin-left:10px;'>
                     {{data.time}}
                 </div>
-                <div id='content' style='margin:10px;font-size:14px;word-wrap: break-word;word-break: break-all;'>
+                <div id='content' style='margin:10px;font-size:16px;word-wrap: break-word;word-break: break-all;'>
                     {{data.content.substr(0,[200])}}
                     <span v-if="data.content.length>200">...</span>
                 </div>

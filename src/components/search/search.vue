@@ -3,24 +3,24 @@
     <!-- 顶部导航栏 -->
     <HeadNav @getInfo="getInfo($event)" :search_key="key"></HeadNav>
     <!-- 下部主体 -->
-    <div id="Maincontainer" style="margin-top:75px;">
-        <div id="leftContent" style="width:30%;float:left;">
+    <div id="search-Maincontainer">
+        <div id="search-leftContent" style="width:30%;float:left;">
             <p> </p>
         </div>
         <!-- 中间展示内容主体 -->
         <div id="midContent" style="" class="round shadow_div midContent">
-            <div id="container" style="margin-top:10px;">
+            <div id="mid-container">
                 <ul class="nav nav-tabs nav justify-content-center" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#showUser" style="color: rgb(0,0,0);">用户</a>
+                        <a class="nav-link active" data-toggle="tab" href="#search-showUser" style="color: rgb(0,0,0);">用户</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#MessageBody" style="color: rgb(0,0,0);" v-on:click="searchMessage">帖子</a>
                     </li>
                 </ul>
                 <!-- tab panes -->
-                <div class="tab-content " style="padding-top: 20px;">
-                    <div id="showUser" class="container tab-pane active" style="width:60%;">
+                <div class="tab-content " style="padding-top: 10px;padding-bottom: 20px;">
+                    <div id="search-showUser" class="container tab-pane active">
                         <ShowUsers v-bind:uid="uid" v-bind:users="user_data"></ShowUsers>
                     </div>
                     <div id="MessageBody" class="container tab-pane fade">
@@ -32,7 +32,7 @@
             <div id="resultBody"> </div>
         </div>
 
-        <div id="rightContent" style="width:30%;float:left;">
+        <div id="search-rightContent" style="width:30%;float:left;">
             <p> </p>
         </div>
     </div>
@@ -46,59 +46,59 @@ import HeadNav from "@/components/navigation/headNav";
 import axios from "axios";
 export default {
     name: 'search',
-    components:{
+    components: {
         HeadNav,
         ShowMessages,
         ShowUsers
     },
     data() {
         return {
-            key:this.$route.query.key,
-            uid:null,
-            username:null,
-            message_data:null,
-            user_data:null
+            key: this.$route.query.key,
+            uid: null,
+            username: null,
+            message_data: null,
+            user_data: null
 
         }
     },
-    mounted(){
+    mounted() {
         this.searchUser();
     },
-    created(){
+    created() {
         //this.getInfo();
     },
-    methods:{
+    methods: {
         //获取个人信息，检查是否已经登录
         getInfo: function (data) {
             console.log("search--receieve info...");
-            if(data.UID!=null&&data.UID!=""){
-                this.uid=data.UID;
-                this.username=data.Username;
+            if (data.UID != null && data.UID != "") {
+                this.uid = data.UID;
+                this.username = data.Username;
             }
         },
         //搜索用户
-        searchUser:function(){
+        searchUser: function () {
             axios
-                .post("/api/searchUser?keyword="+this.key)
-                .then(response =>{
+                .post("/api/searchUser?keyword=" + this.key)
+                .then(response => {
                     //console.log("");
-                    if(response.data!=null)
-                        this.user_data=response.data;
+                    if (response.data != null)
+                        this.user_data = response.data;
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     console.log(error);
                 });
         },
         //搜索帖子
-        searchMessage:function(){
+        searchMessage: function () {
             axios
-                .post("/api/searchMessage?keyword="+this.key)
-                .then(response =>{
+                .post("/api/searchMessage?keyword=" + this.key)
+                .then(response => {
                     //console.log(response);
-                    if(response.data!=null)
-                        this.message_data=response.data;
+                    if (response.data != null)
+                        this.message_data = response.data;
                 })
-                .catch(function(error){
+                .catch(function (error) {
                     console.log(error);
                 });
         }
@@ -110,16 +110,50 @@ export default {
 @import url("../../lib/css/search.css");
 
 body {
-    background: rgb(245,245,245);
+    background: rgb(245, 245, 245);
     /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
     background-repeat: no-repeat;
     background-size: 100% auto;
     background-attachment: fixed; */
 }
-.midContent{
-    width:40%;
-    float:left;
-    background-color:rgba(255,255,255,0.5);
-    padding-bottom:2%;
+
+.midContent {
+    width: 40%;
+    float: left;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding-bottom: 2%;
+}
+#search-Maincontainer{
+    margin-top:75px;
+}
+#mid-container{
+    margin-top:10px;
+}
+#search-showUser{
+    width:60%;
+}
+@media screen and (max-width: 500px) {
+    #search-showUser{
+        width:100%;
+    }
+    #search-Maincontainer{
+        margin-top:5px;
+    }
+    #search-leftContent{
+        display: none;
+    }
+    #search-rightContent{
+        display: none;
+    }
+    body {
+        background: rgb(245, 245, 245);
+    }
+
+    .midContent {
+        width: 100%;
+        float: none;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding-bottom: 2%;
+    }
 }
 </style>

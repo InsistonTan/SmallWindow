@@ -5,13 +5,13 @@
         <HeadNav @getInfo="getInfo($event)"></HeadNav>
     </div>
     <!-- 左边导航栏 -->
-    <div style="width:30%;float:left;height:100%;">
+    <div id="home-left-div" style="width:30%;float:left;">
         <!-- 副导航栏 -->
         <LeftNav :uid="uid"></LeftNav>
-       <p></p>
+        <p></p>
     </div>
     <!-- 中间的主体 -->
-    <div style="width:40%;float:left;">
+    <div id="home-mid-div" >
         <!-- 发表帖子的输入框 -->
         <div style="margin-top:20px;">
             <textarea class="rounded input_area" v-model="input_content" cols="72" rows="5" placeholder="写下你的心情...">
@@ -27,7 +27,7 @@
         </div>
     </div>
     <!-- 右边展示个人信息的div -->
-    <div style="width:30%;float:left;">
+    <div id="home-right-div" style="width:30%;float:left;">
         <div class="rounded infoShow shadow_div">
             <div style="text-align:center; padding-top:15px;">
                 <a href="#"><img src="../../assets/bigUser.png" alt="账号图片"></a>
@@ -45,23 +45,29 @@
                 <span class="infoText">关注</span>
                 <span>
                     <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{follow_num}}</a></b> -->
-                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyFollow'}}" style="text-decoration:none;" class="font_shadow">
-                        {{follow_num}}
-                    </router-link></b>
+                    <b>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFollow'}}" style="text-decoration:none;" class="font_shadow">
+                            {{follow_num}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText">粉丝</span>
                 <span>
                     <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{fan_num}}</a></b> -->
-                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyFan'}}" style="text-decoration:none;" class="font_shadow">
-                        {{fan_num}}
-                    </router-link></b>
+                    <b>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyFan'}}" style="text-decoration:none;" class="font_shadow">
+                            {{fan_num}}
+                        </router-link>
+                    </b>
                 </span>
                 <span class="infoText">帖子</span>
                 <span>
                     <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{message_num}}</a></b> -->
-                    <b><router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
-                        {{message_num}}
-                    </router-link></b>
+                    <b>
+                        <router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
+                            {{message_num}}
+                        </router-link>
+                    </b>
                 </span>
             </div>
         </div>
@@ -246,22 +252,15 @@ export default {
     background: rgb(162, 107, 53);
     color: rgb(250, 250, 250);
 }
-/* .home_body{
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background-image: linear-gradient(to bottom right, #F5DEB3, #FFFFF0);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-} */
+
 body {
-    background: rgb(245,245,245);
+    background: rgb(245, 245, 245);
     /* background-image: linear-gradient(to bottom right, #F5DEB3, #FFFFF0);
     background-repeat: no-repeat;
     background-attachment: fixed;
     animation: my_animation 16s infinite linear;
     -webkit-animation: my_animation 32s infinite linear;    */
-} 
+}
 
 @keyframes my_animation {
     0% {
@@ -277,6 +276,27 @@ body {
     100% {
         background: #F5DEB3;
         /* background-image: linear-gradient(to bottom right, #F5DEB3, #FFFFF0); */
+    }
+}
+
+#home-mid-div {
+    width: 40%;
+    float: left;
+}
+
+@media screen and (max-width: 500px) {
+    #home-mid-div {
+        width: 100%;
+        padding: 10px;
+    }
+    #home-left-div {
+        display: none;
+    }
+    #home-right-div {
+        display: none;
+    }
+    body {
+        background: rgb(245, 245, 245);
     }
 }
 </style>
