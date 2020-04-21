@@ -63,7 +63,7 @@
                 <input type="text" v-model="input_code" class="form-control inputcode" placeholder="验证码" @keydown.enter="login">
                 <!-- 展示登陆结果 -->
                 <p id="result" style="color: rgb(240,0,0);font-size:12px;margin-left:2px;">{{login_result}}</p>
-                <button type="button" class="btn btn-primary btn-login" v-on:click="login">登陆</button>
+                <button type="button" class="btn btn-login" v-on:click="login">登陆</button>
                 <p style="margin-top:8px;">还没有账号？
                     <router-link to="/Register/" style="color:rgb(255,160,0);text-decoration:none;" target="_BLANK" class="font_shadow">
                         现在注册

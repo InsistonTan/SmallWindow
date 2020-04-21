@@ -1,42 +1,46 @@
 <template>
 <div>
-    <nav class="fixed-top headNav" style="">
-        <span class="logo" v-on:click="goHome">
+    <nav class="fixed-top headNav">
+        <div class="logo div-float-left" v-on:click="goHome">
             <img src="../../assets/logo2.png" alt="Logo" class="navbar-brand logo_img">
-        </span>
+        </div>
         <!-- 搜索框 -->
-        <input type="text" class="form-control search_input" v-model="input_search" @keydown.enter="search">
-        <span style="margin-left: 10px;" v-on:click="search" class="search_img">
+        <div class="div-float-left">
+            <input type="text" class="form-control search_input" placeholder="搜索..." v-model="input_search" @keydown.enter="search">
+        </div>
+        <div class="search_img div-float-left" style="margin-left: 10px;" v-on:click="search">
             <img class="head_img" src="../../assets/search.png" alt="search" style="width: 20px;height: 20px;">
-        </span>
-        <!-- <ul > -->
-        <span class="nav_item_div active nav_home_span" @click="goHome">
-            <img src="../../assets/home.png" alt="home" class="nav-home-img" style="width: 20px;height: 20px;">
-            <span>首页</span>
-        </span>
-        <span v-if="uid==null||uid==''" style="margin-left:15px;">
-            <router-link to="/Login/" class="nav-link font_shadow navText" style="margin-left:0px;">
+        </div>
+        <div class="div-float-right" id="nav-register" v-if="uid==null||uid==''">
+            <router-link to="/Register/" style="margin-left:-25px;" class="nav-link font_shadow navText" target="_BLANK">注册</router-link>
+        </div>
+        <div class="div-float-right" v-if="uid==null||uid==''" style="margin-left:15px;">
+            <router-link to="/Login/" class="nav-link font_shadow navText">
                 <img src="../../assets/user.png" alt="user" class="nav-user-img" style="width: 20px;height: 20px;">
                 <span>登陆</span>
             </router-link>
-            
-        </span>
-        <span v-if="uid==null||uid==''">
-            <router-link to="/Register/" style="margin-left:-25px;" class="nav-link font_shadow navText" target="_BLANK">注册</router-link>
-        </span>
-        <span v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
+        </div>
+        <!-- <ul > -->
+        
+
+        <div class="div-float-right" id="changeNav" v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
+            <a class="nav-link font_shadow navText" href="#" style='margin-left:-20px;' v-on:click="safe_exit">
+                退出
+            </a>
+        </div>
+        <div class="div-float-right" v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
             <router-link :to="{path:'/Visit/',query:{uid:uid}}" class="nav-link font_shadow nav_user" style='color:rgb(205,133,63);'>
                 <img src="../../assets/user.png" alt="user" style="width: 20px;height: 20px;" class="nav-user-img">
                 <span class="nav-user-text">
                     {{username}}
                 </span>
             </router-link>
-        </span>
-        <span id="changeNav" v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
-            <a class="nav-link font_shadow navText" href="#" style='margin-left:-20px;' v-on:click="safe_exit">
-                退出
-            </a>
-        </span>
+        </div>
+
+        <div class="nav_item_div active nav_home_span div-float-right" @click="goHome">
+            <img src="../../assets/home.png" alt="home" class="nav-home-img" style="width: 20px;height: 20px;">
+            <span>首页</span>
+        </div>
         <!-- </ul> -->
     </nav>
 </div>
@@ -65,7 +69,6 @@ export default {
         //获取个人信息，检查是否已经登录
         getInfo: function () {
             console.log("headNav-getInfo...");
-
             axios
                 .post("/api/getInfo")
                 .then(response => {
@@ -125,11 +128,19 @@ export default {
 <style>
 @import url("../../lib/css/shadow.css");
 
+.div-float-left {
+    float: left;
+}
+
+.div-float-right {
+    float: right;
+}
+
 .nav_item_div {
     width: 80px;
     font-size: 14px;
     margin-top: 10px;
-    margin-left: 300px;
+    /* margin-left: 300px; */
     overflow: hidden;
 }
 
@@ -149,13 +160,15 @@ export default {
 }
 
 .headNav {
-    display: flex;
-    flex-direction: row;
+    /* display: flex;
+    flex-direction: row; */
     padding: 8px;
     background-color: rgba(255, 255, 255, 1);
     transition: background-color 0.5s;
     overflow: hidden;
     box-shadow: 0px 0px 5px rgb(220, 220, 220);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
 }
 
 .headNav:hover {
@@ -180,6 +193,7 @@ export default {
 }
 
 .search_input {
+    border-radius: 15px;
     margin-top: 5px;
     background: rgba(255, 255, 255, 0);
     width: 400px;
@@ -190,7 +204,7 @@ export default {
     width: 18px;
     height: 18px;
     margin-top: 12px;
-    margin-left: 80px;
+    margin-left: 0px;
 }
 
 .search_img {
@@ -205,11 +219,27 @@ export default {
     transform: translateY(-500px);
     filter: drop-shadow(#cd853f 0 500px);
 }
-
+#changeNav{
+    margin-right: 10%;
+}
+#nav-register{
+    margin-right: 10%;
+}
 @media only screen and (max-width: 500px) {
-    .nav_home_span{
+    #nav-register{
+        margin-right: 0;
+    }
+    #changeNav{
+        margin-right: 0;
+    }
+    .search_img {
         display: none;
     }
+
+    .nav_home_span {
+        display: none;
+    }
+
     .navText {
         font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
         font-size: 13px;
@@ -222,6 +252,7 @@ export default {
     }
 
     .nav-user-text {
+        font-size: 17px;
         margin-left: 0px;
     }
 
@@ -232,14 +263,18 @@ export default {
     .headNav {
         /* display: flex;
         flex-direction: row; */
-        padding-top: 8px;
+        padding-top: 3px;
+        padding-bottom: 3px;
         background-color: rgba(255, 255, 255, 1);
         transition: background-color 0.5s;
         overflow: hidden;
         box-shadow: 0px 0px 5px rgb(220, 220, 220);
+        transition: all 0.3s;
+        -webkit-transition: all 0.3s;
     }
 
     .search_input {
+        border-radius: 15px;
         margin-top: 5px;
         background: rgba(255, 255, 255, 0);
         width: 100px;

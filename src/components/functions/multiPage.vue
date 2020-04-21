@@ -5,12 +5,12 @@
             <HeadNav @getInfo="getInfo_nav($event)"></HeadNav>
         </div>
         <!-- 左导航栏 -->
-        <div style="width:30%;float:left;">
+        <div id="multi-left-div" style="width:30%;float:left;">
             <LeftNav :uid="login_uid"></LeftNav>
         </div>
         <!-- 中间的内容主体 -->
-        <div style="width:50%;float:left;">
-            <div style="margin-top:20px;">
+        <div id="multi-mid-div">
+            <div id="multi-container">
                 <!-- 标题 -->
                 <div class="shadow_div" style="background:white;padding:5px;text-align:center;font-size:16px;">
                     <span v-if="action=='seeTopMsg'">热门帖子Top10</span>
@@ -297,5 +297,23 @@ export default {
 @import url("../../lib/css/shadow.css");
     body{
         background: rgb(245,245,245);
+    }
+    #multi-mid-div{
+        width:50%;
+        float:left;
+    }
+    #multi-container{
+        margin-top: 20px;
+    }
+    @media screen and (max-width: 500px){
+        #multi-container{
+            margin-top: -10px;
+        }
+        #multi-mid-div{
+            width:100%;
+        }
+        #multi-left-div{
+            display: none;
+        }
     }
 </style>

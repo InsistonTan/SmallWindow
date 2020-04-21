@@ -1,27 +1,27 @@
 <template>
 <div>
-    <div class="container">
+    <div class="container" >
         <!-- 标题 -->
-        <div style="text-align: center;">
-            <h2 style="margin-top:-50px;color:rgb(0,0,0);"><span class="my_tilte">小窗户-分享你的生活</span></h2>
+        <div class="register-title" style="text-align: center;">
+            <h2 style="margin-top:-50px;color:rgb(205,133,63);"><span class="my_tilte">小窗户-分享你的生活</span></h2>
         </div>
         <!-- 中间的主体-->
         <div class="rounded shadow_div mid_div">
             <!-- <form> -->
                 <h5 style="text-align: center;margin: 10px;"><span style="color: rgb(50,50,50);" class="my_text">注册小窗户账号</span></h5>
                 <div class="form-group div-input">
-                    <input class="form-control username shadow_div" v-model="input_username" type="text" placeholder="请输入用户名" style="text-indent:16px;" required>
+                    <input class="form-control username" v-model="input_username" type="text" placeholder="请输入用户名" style="text-indent:16px;" required>
                 </div>
                 <div class="form-group div-input">
-                    <input class="form-control password shadow_div" v-model="input_password1" type="password" placeholder="请输入密码" style="text-indent:16px;" required>
+                    <input class="form-control password" v-model="input_password1" type="password" placeholder="请输入密码" style="text-indent:16px;" required>
                 </div>
                 <div class="form-group div-input">
-                    <input class="form-control password shadow_div" v-model="input_password2" type="password" placeholder="确认密码" style="text-indent:16px;" required>
+                    <input class="form-control password" v-model="input_password2" type="password" placeholder="确认密码" style="text-indent:16px;" required>
                 </div>
                 <div class="div-input">
                     <!-- <canvas id="codecanvas" class="codecanvas" height="40" width="80" onclick="creatCode()"></canvas> -->
                     <VerificationCode height="40" width="80" v-on:getCode="v_code=$event" v-if="showCode==true"></VerificationCode>
-                    <input type="text" class="form-control shadow_div" placeholder="验证码" v-model="input_code" style="width:80px;margin-top:10px;">
+                    <input type="text" class="form-control" placeholder="验证码" v-model="input_code" style="width:80px;margin-top:10px;">
                     <p style="color: rgb(240,0,0);font-size:12px;margin-left:2px;margin-top:4px;">
                         {{input_result}}
                     </p>
@@ -157,19 +157,45 @@ export default {
 @import url("../lib/css/index.css");
 
 body {
-    background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
+    background: rgb(245,245,245);
+    /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; */
 }
 
 .mid_div {
     position: fixed;
-    top: 40%;
-    left: 50%;
+    top: 10%;
+    left: 40%;
     width: 300px;
     height: 400px;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 1);
     margin-top: 20px;
+}
+
+@media screen and (max-width: 500px){
+    .register-title{
+        /* padding-bottom:165%; */
+        padding-bottom:0%;
+    }
+    body {
+        background: rgb(245,245,245);
+        /* background-image: linear-gradient(to bottom right, #FFDAB9, #FFFFF0);
+        background-repeat: no-repeat;
+        background-attachment: fixed; */
+        
+    }
+    .mid_div {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        width: 80%;
+        height: 400px;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 1);
+        margin-top: 20px;
+    }
+
 }
 </style>

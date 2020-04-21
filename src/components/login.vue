@@ -16,7 +16,7 @@
         <input type="text" v-model="input_code" class="form-control inputcode" placeholder="验证码" @keydown.enter="login">
         <!-- 展示登陆结果 -->
         <p id="result" style="color: rgb(240,0,0);font-size:12px;margin-left:2px;">{{login_result}}</p>
-        <button type="button" class="btn btn-primary btn-login" v-on:click="login">登陆</button>
+        <button type="button" class="btn  btn-login" v-on:click="login">登陆</button>
         <p style="margin-top:8px;">还没有账号？
             <router-link to="/Register/" style="color:rgb(255,160,0);text-decoration:none;" target="_BLANK" class="font_shadow">
                 现在注册
@@ -44,7 +44,23 @@ export default {
             login_result: null
         }
     },
+    created(){
+        this.getInfo();
+    },
     methods: {
+        //获取个人信息，检查是否已经登录
+        getInfo: function () {
+            axios
+                .post("/api/getInfo")
+                .then(response => {
+                    if (response.data.UID != null && response.data.UID != "") {
+                        history.back(-1);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
         //登陆
         login: function () {
             console.log("login...");
@@ -71,8 +87,10 @@ export default {
                 })
                 .then(response => {
                     //console.log(response);
-                    if (response.data == "success")
-                        window.location.href = "/#/Home/";
+                    if (response.data == "success"){
+                        // window.location.href = "/#/Home/";
+                        history.back(-1);
+                    }   
                     else if (response.data == "user not exist") {
                         this.login_result = "用户不存在";
                         this.fleshCode();
@@ -105,6 +123,7 @@ body {
 }
 
 #login-mid-div {
+    border-radius: 4px;
     padding: 10px;
     width: 20%;
     position: fixed;
@@ -116,22 +135,30 @@ body {
 }
 
 .login-title-div {
+    margin-top: 0px;
+    color:rgb(205,133,63);
     text-align: center;
     width: 100%;
 }
 
 @media screen and (max-width: 500px) {
+    .login-title-div {
+        margin-top: -40px;
+        color:rgb(205,133,63);
+        text-align: center;
+        width: 100%;
+    }
     body {
         background: rgb(245, 245, 245);
     }
 
     #login-mid-div {
-        
+        margin: 10px;
         padding: 10px;
-        width: 100%;
+        width: 90%;
         position: fixed;
         top: 40%;
-        left: 50%;
+        left: 47%;
         transform: translate(-50%, -50%);
         background-color: rgba(255, 255, 255, 1);
         margin-top: 20px;

@@ -5,7 +5,7 @@
         <HeadNav @getInfo="getInfoFromNav($event)"></HeadNav>
     </div>
     <!-- 左边发帖人信息div -->
-    <div style="width:30%;float:left;">
+    <div id="viewMsg-left-div" style="width:30%;float:left;">
         <div class="msgUserInfo shadow_div">
             <div style="padding-top: 20px;">
                 <img src="../../assets/bigUser.png" alt="头像">
@@ -75,7 +75,7 @@
         </div>
     </div>
     <!-- 中间帖子详情div -->
-    <div style="width:40%;float:left;">
+    <div id="viewMsg-mid-div">
         <div class="viewMsg_content shadow_div rounded">
             <!-- 用户名div -->
             <div id='Username' style='font-size:18px;margin-left:10px;padding-top:6px;'>
@@ -114,7 +114,7 @@
         </div>
         <div class="viewMsg_commit shadow_div">
             <h6 style="text-align:center;">评论<span>({{message.comment}})</span></h6>
-            <div v-if="message.comment==0" style="text-align:center;margin-top:20px;font-size:14px;">
+            <div v-if="message.comment==0" style="text-align:center;margin-top:20px;font-size:16px;">
                 <p>暂无评论</p>
             </div>
             <div v-else>
@@ -123,16 +123,22 @@
         </div>
     </div>
     <!-- 右边回复div -->
-    <div style="width:30%;float:left;position:fixed;margin-left:70%;">
+    <div id="viewMsg-right-div" style="width:30%;float:left;position:fixed;margin-left:70%;">
         <div class="viewMsg_input rounded shadow_div">
             <div style="margin:8px;margin-top:0px;padding-bottom:10px;">
-                <textarea cols="36" rows="5" class="rounded" style="margin-top:5px;width:99.5%;" placeholder="回复点啥..." v-model="input_comment">
+                <textarea id="viewMsg-mobile-input" cols="36" rows="5" class="rounded" style="margin-top:5px;width:99.5%;" placeholder="回复点啥..." v-model="input_comment">
                 </textarea>
                 <br>
                 <button type="button" class="btn_submit" @click="addComment">回复</button>
             </div> 
         </div>
     </div>
+    <!-- 移动端的回复框 -->
+    <div class="fixed-bottom viewMsg-mobile-input" style="padding:5px;">
+        <input id="viewMsg-mobile-input" type="text" class="form-control rounded" style="width:86%;" placeholder="回复点啥..." v-model="input_comment">
+        <button type="button" class="btn btn-outline-success btn-sm" @click="addComment" style="margin-left:5px;">回复</button>
+    </div>
+    <!-- 消息框 -->
     <MyModal v-bind:show="show_modal" v-bind:title="title" @close="closeModal" @confirm="modalConfirm">
     </MyModal>
 </div>
@@ -219,6 +225,7 @@ export default {
         //评论组件点击回复按钮
         comment_reply(reply_name){
             this.input_comment="@"+reply_name+" ";
+            $("#viewMsg-mobile-input").focus();
         },
         //右侧回复评论
         addComment(){
@@ -394,7 +401,7 @@ export default {
                 this.closeModal();
             else if(this.title=="你还未登陆,请先登陆"){
                 //alert("login");
-                window.location.href="/";
+                window.location.href="/#/Login/";
             }
             else if(this.title=="输入内容为空,请检查")
                 this.closeModal();
@@ -455,6 +462,7 @@ body {
     background: white;
     width: 100%;
     padding: 10px;
+    padding-bottom: 30px;
 }
 
 .bigIcon_div{
@@ -540,5 +548,45 @@ body {
     margin-left: 40px;
     margin-top: 5px;
     padding-bottom: 20px;
+}
+
+#viewMsg-mid-div{
+    width:40%;
+    float:left;
+}
+/* 移动端的评论的输入div */
+.viewMsg-mobile-input{
+    display: none;
+}
+@media screen and (max-width: 500px){
+    .viewMsg_commit{
+        margin-top: 3px;
+        background: white;
+        width: 100%;
+        padding: 10px;
+        padding-bottom: 40px;
+    }
+    .viewMsg-mobile-input{
+        background: white;
+        display:flex;
+        flex-direction: row;
+    }
+    .viewMsg_content {
+        margin-top: 0px;
+        width: 100%;
+        background: white;
+        padding-bottom: 20px;
+    }
+
+    #viewMsg-mid-div{
+        /* margin: 10px; */
+        width:100%;
+    }
+    #viewMsg-left-div{
+        display: none;
+    }
+    #viewMsg-right-div{
+        display: none;
+    }
 }
 </style>

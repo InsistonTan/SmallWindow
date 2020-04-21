@@ -13,7 +13,7 @@
     <!-- 中间的主体 -->
     <div id="home-mid-div" >
         <!-- 发表帖子的输入框 -->
-        <div style="margin-top:20px;">
+        <div id="home-input-div" style="">
             <textarea class="rounded input_area" v-model="input_content" cols="72" rows="5" placeholder="写下你的心情...">
             </textarea>
             <button type="button" class="btn_submit" style="width:60px;height:30px;font-size:12px;" v-on:click="submitMessage" title="点击发表">发表
@@ -283,8 +283,13 @@ body {
     width: 40%;
     float: left;
 }
-
+#home-input-div{
+    margin-top:20px;
+}
 @media screen and (max-width: 500px) {
+    #home-input-div{
+        margin-top: -10px;
+    }
     #home-mid-div {
         width: 100%;
         padding: 10px;

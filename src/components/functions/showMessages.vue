@@ -25,7 +25,7 @@
                 </div>
             </div>      
         </div>
-        <hr style="height:0px;margin-bottom:6px;margin-top:10px;">
+        <!-- <hr style="height:0px;margin-bottom:6px;margin-top:10px;"> -->
         <div id="footer" class="foot">
             <div class="view">
                 <img src="../../assets/view.png" alt="view" class="foot_img" style="margin-left:10px;">
@@ -199,7 +199,7 @@ export default {
             else if(this.title=="正在删除..."||this.title=="删除成功！")
                 this.show_modal=false;
             else if(this.title=="你还未登陆,请先登陆")
-                window.location.href="/";
+                window.location.href="/#/Login/";
         },
 
         //
