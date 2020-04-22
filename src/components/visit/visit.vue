@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <HeadNav @getInfo="getInfo_nav($event)"></HeadNav>
     <!-- 下方主体-->
-    <div id="container" style="margin-top:50px;">
+    <div id="visit-container">
         <div id="topDiv" style="width:100%;text-align:center;">
             <div style="padding-top: 20px;">
                 <img src="../../assets/bigUser.png" alt="头像">
@@ -285,6 +285,9 @@ export default {
         background-repeat: no-repeat;
         background-attachment: fixed; */
     }
+    #visit-container{
+        margin-top:50px;
+    }
     .edit_link{
         color:dodgerblue;
     }
@@ -322,6 +325,9 @@ export default {
         float:left;
     }
     @media screen and (max-width: 500px){
+        #visit-container{
+            margin-top:-20px;
+        }
         #visit-leftContent{
             display: none;
         }

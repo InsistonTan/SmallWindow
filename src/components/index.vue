@@ -40,11 +40,15 @@
                 <span class="carousel-control-next-icon"></span>
             </a>
         </div>
-        <div style="text-align:center;margin-top:10px;margin-bottom:-10px;"><h6>最新发表</h6></div>
-        <hr style="height:0px;">
+        <div id="newMsg-title"><h6>最新发表</h6></div>
+        <div id="index-secondNav">
+            <SecondNav :login_uid="null" @getSelect="second_nav_select($event)"></SecondNav>
+        </div>
+
+        <hr id="index-hr" style="height:0px;">
         <!-- 展示最新的帖子 -->
-        <div style="margin-top:2%;">
-            <ShowMessages v-bind:messages="messaages" uid=""></ShowMessages>
+        <div id="index-showMsg-div">
+            <ShowMessages v-bind:messages="messages" uid=""></ShowMessages>
         </div>
     </div>
     <!-- 右边登陆内容 -->
@@ -78,6 +82,7 @@
 <script>
 import axios from 'axios';
 import HeadNav from '@/components/navigation/headNav';
+import SecondNav from '@/components/navigation/secondNav';
 import LeftNav from '@/components/navigation/leftNav';
 import VerificationCode from '@/components/functions/verificationCode';
 import ShowMessages from '@/components/functions/showMessages';
@@ -85,6 +90,7 @@ export default {
     name: 'index',
     components: {
         HeadNav,
+        SecondNav,
         LeftNav,
         VerificationCode,
         ShowMessages
@@ -100,7 +106,7 @@ export default {
             input_code: null,
             v_code: null,
             login_result: null,
-            messaages: null,
+            messages: null,
 
         }
     },
@@ -109,8 +115,34 @@ export default {
     },
     mounted() {
         this.getNewMessage();
+        //this.getTopMsg();
     },
     methods: {
+        //处理副导航栏的选择事件
+        second_nav_select(data){
+            $("body,html").scrollTop(0);
+            if(data=="最新"){
+                //alert(data);
+                this.getNewMessage();
+            }
+            else if(data=="热门"){
+                //alert(data);
+                this.getTopMsg();   
+            }
+        },
+        //获取热门帖子
+        getTopMsg(){
+            axios
+                .post("/api/getMsgTop10")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.messages=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //获取最新发表的帖子
         getNewMessage:function(){
             axios
@@ -118,7 +150,7 @@ export default {
                 .then(response=>{
                     //console.log(response);
                     if(response.data!=null)
-                        this.messaages=response.data;
+                        this.messages=response.data;
                 })
                 .catch(function(error){
                     console.log(error);
@@ -204,13 +236,42 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;    */
 }
+
 #index_pic{
     margin-top:20px;
 }
 #index_mid_div{
     width:40%;float:left;
 }
+#newMsg-title{
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:-10px;
+}
+#index-secondNav{
+    display: none;
+}
+#index-showMsg-div{
+    margin-top: 2%;
+}
 @media only screen and (max-width: 500px){
+    #index-hr{
+        display: none;
+    }
+    /* #index-showMsg-div{
+        margin-top: 35px;
+    } */
+    #index-secondNav{
+        z-index: 2;
+        position: sticky;
+        top:45px;
+        width: 100%;
+        display:block;
+        
+    }
+    #newMsg-title{
+        display: none;
+    }
     body {
         background: rgb(245,245,245);
     }
@@ -224,6 +285,7 @@ body {
         display: none;
     }
     #index_mid_div{
+        float: none;
         width: 100%;
         padding: 10px;
         font-size: 100%;

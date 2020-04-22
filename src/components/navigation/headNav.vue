@@ -268,7 +268,7 @@ export default {
         background-color: rgba(255, 255, 255, 1);
         transition: background-color 0.5s;
         overflow: hidden;
-        box-shadow: 0px 0px 5px rgb(220, 220, 220);
+        box-shadow: none;
         transition: all 0.3s;
         -webkit-transition: all 0.3s;
     }

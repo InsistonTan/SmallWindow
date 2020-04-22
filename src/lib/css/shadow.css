@@ -69,3 +69,8 @@
 /* .border_shadow{
     border: 2px groove rgba(240,240,240,0.5);
 } */
+@media screen and (max-width:500px){
+	.shadow_div{
+		box-shadow:none;
+	}
+}

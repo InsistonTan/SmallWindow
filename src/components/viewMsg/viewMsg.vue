@@ -572,7 +572,7 @@ body {
         flex-direction: row;
     }
     .viewMsg_content {
-        margin-top: 0px;
+        margin-top: -10px;
         width: 100%;
         background: white;
         padding-bottom: 20px;

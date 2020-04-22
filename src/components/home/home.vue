@@ -16,14 +16,19 @@
         <div id="home-input-div" style="">
             <textarea class="rounded input_area" v-model="input_content" cols="72" rows="5" placeholder="写下你的心情...">
             </textarea>
-            <button type="button" class="btn_submit" style="width:60px;height:30px;font-size:12px;" v-on:click="submitMessage" title="点击发表">发表
+            <button type="button" class="btn_submit" style="width:60px;height:30px;font-size:14px;" 
+                    v-on:click="submitMessage" title="点击发表">发表
             </button>
             <span style="color:red;font-size:14px;margin-left:10px;">{{submit_result}}</span>
         </div>
-        <hr style="height:10px;">
+        <!-- 副导航栏 -->
+        <div id="home-secondNav">
+            <SecondNav :login_uid="'00000'" :select_item="select_item" @clear_select="clear_select" @getSelect="second_nav_select($event)"></SecondNav>
+        </div>
+        <hr id="home-hr" style="height:10px;">
         <!-- 展示帖子 -->
         <div id="MessageBody">
-            <ShowMessages v-bind:messages="messages" v-bind:uid="uid" @reload="getMessages"></ShowMessages>
+            <ShowMessages v-bind:messages="messages" v-bind:uid="uid" @reload="getFollowMessages"></ShowMessages>
         </div>
     </div>
     <!-- 右边展示个人信息的div -->
@@ -79,6 +84,7 @@
 
 <script>
 import HeadNav from "@/components/navigation/headNav";
+import SecondNav from '@/components/navigation/secondNav';
 import LeftNav from "@/components/navigation/leftNav";
 import ShowMessages from "@/components/functions/showMessages";
 import MyModal from "@/components/functions/myModal";
@@ -90,6 +96,7 @@ export default {
     name: 'home',
     components: {
         HeadNav,
+        SecondNav,
         LeftNav,
         ShowMessages,
         MyModal
@@ -106,7 +113,8 @@ export default {
             input_content: null,
             submit_result: null,
             show_modal: false,
-            title: null
+            title: null,
+            select_item:null//副导航栏选择
         }
     },
     created() {
@@ -114,9 +122,97 @@ export default {
         //show();
     },
     mounted() {
-        this.getMessages();
+        this.getFollowMessages();
     },
     methods: {
+        //副导航栏选择事件处理
+        second_nav_select(data){
+            $("body,html").scrollTop(0);
+            //document.documentElement.scrollTop=190;//不需要加单位
+            if(data=="最新"){
+                this.getNewMessage();
+            }
+            else if(data=="热门"){
+                this.getTopMsg();   
+            }
+            else if(data=="关注"){
+                this.getFollowMessages();   
+            }
+            else if(data=="点赞"){
+                this.getMyLikeMsg();  
+            }
+            else if(data=="评论"){
+                this.getMyCommentMsg();
+            }
+            else if(data=="收藏"){
+                this.getMyCollectMsg();  
+            }
+        },
+        //获取登陆者评论过的帖子
+        getMyCommentMsg(){
+            axios   
+                .post("/api/getMyCommentMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.messages=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+        //获取登陆者的收藏的帖子
+        getMyCollectMsg(){
+            axios   
+                .post("/api/getMyCollectMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.messages=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+        //获取登陆者的点赞的帖子
+        getMyLikeMsg(){
+            axios   
+                .post("/api/getMyLikeMsg")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.messages=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+        //获取热门帖子
+        getTopMsg(){
+            axios
+                .post("/api/getMsgTop10")
+                .then(response =>{
+                    if(response.data!=null){
+                        this.messages=response.data;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
+        //获取最新发表的帖子
+        getNewMessage:function(){
+            axios
+                .post("/api/getNewMessage")
+                .then(response=>{
+                    //console.log(response);
+                    if(response.data!=null)
+                        this.messages=response.data;
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //关闭消息框
         close_modal() {
             this.show_modal = false;
@@ -160,7 +256,7 @@ export default {
             //     });
         },
         //获取关注者的帖子和自己的帖子
-        getMessages: function () {
+        getFollowMessages: function () {
             axios
                 .post("/api/getFollowMessage")
                 .then(response => {
@@ -193,7 +289,8 @@ export default {
                         this.submit_result = null;
                         this.title = "发表成功！";
                         this.show_modal = true;
-                        this.getMessages();
+                        this.select_item="关注";
+                        this.getFollowMessages();
                     } else {
                         //this.submit_result="发表失败！";
                         this.title = "发表失败！";
@@ -203,6 +300,9 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+        clear_select(){
+            this.select_item=null;
         }
     }
 
@@ -286,7 +386,27 @@ body {
 #home-input-div{
     margin-top:20px;
 }
+/* #home-secondNav{
+    display: none;
+} */
+#home-secondNav{
+        z-index: 2;
+        position: sticky;
+        top:45px;
+        width: 100%;
+        display:block; 
+    }
 @media screen and (max-width: 500px) {
+    #home-secondNav{
+        z-index: 2;
+        position: sticky;
+        top:45px;
+        width: 100%;
+        display:block; 
+    }
+    #home-hr{
+        display: none;
+    }
     #home-input-div{
         margin-top: -10px;
     }
