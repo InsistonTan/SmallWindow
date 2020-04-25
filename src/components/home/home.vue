@@ -28,7 +28,9 @@
         <hr id="home-hr" style="height:10px;">
         <!-- 展示帖子 -->
         <div id="MessageBody">
-            <ShowMessages v-bind:messages="messages" v-bind:uid="uid" @reload="getFollowMessages"></ShowMessages>
+            <div v-if="messages==null||messages==[]" style="text-align:center;margin-top:10px;">加载数据中{{change_text}}</div>
+            <div v-else-if="messages.length<1" style="text-align:center;margin-top:10px;">暂无数据</div>
+            <ShowMessages v-else v-bind:messages="messages" v-bind:uid="uid" @reload="getFollowMessages"></ShowMessages>
         </div>
     </div>
     <!-- 右边展示个人信息的div -->
@@ -109,12 +111,13 @@ export default {
             follow_num: 0,
             fan_num: 0,
             message_num: 0,
-            messages: null,
+            messages: [],
             input_content: null,
             submit_result: null,
             show_modal: false,
             title: null,
-            select_item:null//副导航栏选择
+            select_item:null,//副导航栏选择
+            change_text:'.'
         }
     },
     created() {
@@ -122,12 +125,49 @@ export default {
         //show();
     },
     mounted() {
+        this.load_animation();
         this.getFollowMessages();
     },
+    beforeRouteLeave (to, from, next) {
+        if(to.name=="index"){
+            this.$destroy();
+            next();
+        }
+        else{
+            next();
+        }
+    },
     methods: {
+        //...的动画效果
+        load_animation(){
+            setTimeout(this.change_pointer,300);
+        },
+        //动态的...
+        change_pointer(){
+            if(this.change_text=="."){
+                this.change_text="..";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text==".."){
+                this.change_text="...";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="..."){
+                this.change_text=".";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }   
+        },
         //副导航栏选择事件处理
         second_nav_select(data){
             $("body,html").scrollTop(0);
+            this.messages=null;
+            this.load_animation();
             //document.documentElement.scrollTop=190;//不需要加单位
             if(data=="最新"){
                 this.getNewMessage();

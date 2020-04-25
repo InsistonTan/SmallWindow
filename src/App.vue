@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <router-view v-if="show==true" :key="$route.fullPath+new Date().toString()"/>
+    <!-- :key="$route.fullPath+new Date().toString()" -->
+    <router-view v-if="show==true&&$route.meta.keepAlive!=true" :key="$route.fullPath"/>
+    <keep-alive>
+      <router-view v-if="show==true&&$route.meta.keepAlive==true" :key="$route.fullPath"/>
+    </keep-alive>
   </div>
 </template>
 

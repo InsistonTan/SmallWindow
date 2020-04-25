@@ -87,6 +87,15 @@ export default {
     mounted(){
 
     },
+    beforeRouteLeave (to, from, next) {
+        if(to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+            this.$destroy();
+            next();
+        }
+        else{
+            next();
+        }
+    },
     methods:{
         //从顶部导航栏获取登录信息
         getInfo_nav(user){

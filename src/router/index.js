@@ -14,43 +14,61 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Index',
-      component: Index
+      name: 'index',
+      component: Index,
+      meta:{
+        keepAlive: true
+      }
     },
     {
       path: '/Home/',
-      name: 'Home',
-      component: Home
+      name: 'home',
+      component: Home,
+      meta:{
+        keepAlive: true
+      }
     },
     {
       path: '/Register/',
-      name: 'Register',
+      name: 'register',
       component: Register
     },
     {
       path: '/Login/',
-      name: 'Login',
+      name: 'login',
       component: Login
     },
     {
       path: '/Search/',
-      name: 'Search',
-      component: Search
+      name: 'search',
+      component: Search,
+      meta:{
+        keepAlive: true
+      }
     },
     {
       path: '/Visit/',
-      name: 'Visit',
-      component: Visit
+      name: 'visit',
+      component: Visit,
+      meta:{
+        keepAlive: true
+      }
     },
     {
       path: '/ViewMsg/',
-      name: 'ViewMsg',
-      component: ViewMsg
+      name: 'viewMsg',
+      component: ViewMsg,
+      meta:{
+        keepAlive: true
+      }
     },
     {
       path: '/MultiPage/',
-      name: 'MultiPage',
-      component: MultiPage
+      name: 'multiPage',
+      component: MultiPage,
+      meta:{
+        keepAlive: true
+      }
     }
   ]
 })

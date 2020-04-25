@@ -48,7 +48,8 @@
         <hr id="index-hr" style="height:0px;">
         <!-- 展示最新的帖子 -->
         <div id="index-showMsg-div">
-            <ShowMessages v-bind:messages="messages" uid=""></ShowMessages>
+            <div v-if="messages==null" style="text-align:center;">加载数据中{{change_text}}</div>
+            <ShowMessages v-else v-bind:messages="messages" uid=""></ShowMessages>
         </div>
     </div>
     <!-- 右边登陆内容 -->
@@ -107,20 +108,35 @@ export default {
             v_code: null,
             login_result: null,
             messages: null,
-
+            change_text:'.'
         }
     },
     created(){
+        console.log("index--created..");
         //this.getInfo();
     },
     mounted() {
+        console.log("index--mounted..");
+        console.log("index-meta-keepAlive: "+this.$route.meta.keepAlive);
+        this.load_animation();
         this.getNewMessage();
         //this.getTopMsg();
+    },
+    beforeRouteLeave (to, from, next) {
+        if(to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+            this.$destroy();
+            next();
+        }
+        else{
+            next();
+        }
     },
     methods: {
         //处理副导航栏的选择事件
         second_nav_select(data){
             $("body,html").scrollTop(0);
+            this.messages=null;
+            this.load_animation();
             if(data=="最新"){
                 //alert(data);
                 this.getNewMessage();
@@ -129,6 +145,31 @@ export default {
                 //alert(data);
                 this.getTopMsg();   
             }
+        },
+        //...的动画效果
+        load_animation(){
+            setTimeout(this.change_pointer,300);
+        },
+        //动态的...
+        change_pointer(){
+            if(this.change_text=="."){
+                this.change_text="..";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text==".."){
+                this.change_text="...";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="..."){
+                this.change_text=".";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }   
         },
         //获取热门帖子
         getTopMsg(){

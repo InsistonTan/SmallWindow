@@ -152,6 +152,26 @@ export default {
     mounted(){
         this.getMessages();
     },
+    //保存上个页面的地址
+    beforeRouteEnter (to, from, next) {
+        var storage=window.sessionStorage;
+        if(storage.getItem(to.fullPath)==null)
+            storage.setItem(to.fullPath,from.fullPath);
+        next();  
+    },
+    beforeRouteLeave (to, from, next) {
+        var storage=window.sessionStorage;
+        var last_path=storage.getItem(from.fullPath);
+        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+            this.$destroy();
+            storage.removeItem(from.fullPath);
+            console.log("visit--destroy");
+        }
+        else{
+            console.log("visit--not destroy");
+        }
+        next();
+    },
     methods: {
         //刷新messages
         reload(){
@@ -195,14 +215,18 @@ export default {
         },
         //消息框点击了确认
         confirm() {
-            console.log("modal--confirm");
-            this.showModal = false;
-            if(this.login_uid==null||this.login_uid=="")
+            //console.log("modal--confirm");
+            if(this.title == "你还未登陆,请先登陆"){
+                this.showModal = false;
                 location.href = "/";
+            }
+            else if(this.title == "关注失败"){
+                this.showModal = false;
+            }
         },
         //关闭消息框
         close() {
-            console.log("modal--cancel");
+            //console.log("modal--cancel");
             this.showModal = false;
         },
         //从状态栏获取信息
@@ -216,7 +240,7 @@ export default {
             axios
                 .post("/api/getVisitMessage?visitUID="+this.uid)
                 .then(response =>{
-                    console.log(response);
+                    //console.log(response);
                     
                     if(response.data!=null)
                         this.messages=response.data;
@@ -268,7 +292,10 @@ export default {
                 .then(response => {
                     if (response.data == "success")
                         location.reload();
-                    else alert("关注失败");
+                    else {
+                        this.title = "关注失败";
+                        this.showModal = true;
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);

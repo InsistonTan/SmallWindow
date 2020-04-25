@@ -3,7 +3,7 @@
     <div class='rounded shadow_div main_div' v-for="user in users" v-bind:key="user.UID" v-if="user.UID!=null">
         <img src='../../assets/user2.png' alt='user' style='margin:4px;'>
         <!-- <b><a href='#' style='text-decoration: none;'>{{user.Username}}</a></b> -->
-        <b><router-link :to="{path:'/Visit/',query:{uid:user.UID}}" style="text-decoration:none;">
+        <b><router-link id="showUser-name" :to="{path:'/Visit/',query:{uid:user.UID}}" style="text-decoration:none;">
             {{user.Username}}
         </router-link></b>
         <button type='button' class='btn btn-outline-success btn-sm follow_btn1' v-if="user.isFollowed==0&&user.UID!=uid" 
@@ -89,6 +89,7 @@ export default {
 <style>
     @import url("../../lib/css/shadow.css");
     .main_div{
+        padding: 10px;
         margin-top:10px;
         background-color: rgba(255,255,255,0.8);
     }
@@ -106,4 +107,26 @@ export default {
         float:right;
         margin:6px;
     }
+
+@media screen and (max-width: 500px){
+    #showUser-name{
+        font-size: 18px;
+    }
+    .follow_btn1{
+        width:50px;
+        height:35px;
+        font-size:12px;
+        float:right;
+        margin:6px;
+        margin-top: 0px;
+    }
+    .follow_btn2{
+        width:70px;
+        height:35px;
+        font-size:12px;
+        float:right;
+        margin:6px;
+        margin-top: 0px;
+    }
+}
 </style>

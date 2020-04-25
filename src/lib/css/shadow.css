@@ -72,5 +72,34 @@
 @media screen and (max-width:500px){
 	.shadow_div{
 		box-shadow:none;
-	}
+    }
+    /* 从右边飞入动画 */
+    @keyframes fly_in {
+        0% {
+            margin-left: 100%;
+        }
+        50% {
+            margin-left: -15%;
+        }
+        100% {
+            margin-left: 0%;
+        }
+  }
+    /* 弹出框的过渡动画 */
+    .myModal-enter-active{
+        animation: fly_in 0.7s;
+    }
+    .myModal-leave-active {
+        animation: fly_in 0.3s reverse;
+    }
+
+    /* 淡出淡入效果 */
+    /* .myModal-enter-active,.myModal-leave-active{
+        transition: all 0.3s;
+        animation: none;
+    }
+    .myModal-enter,.myModal-leave-to{
+        opacity: 0;
+       
+    } */
 }

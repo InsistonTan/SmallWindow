@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :key="this.$route.fullPath">
     <!-- 顶部导航栏 -->
     <div>
         <HeadNav @getInfo="getInfoFromNav($event)"></HeadNav>
@@ -149,6 +149,7 @@ import MyModal from "@/components/functions/myModal";
 import ShowComment from "@/components/functions/showComment";
 import HeadNav from "@/components/navigation/headNav";
 import axios from "axios";
+
 export default {
     name: 'viewMsg',
     components: {
@@ -189,15 +190,38 @@ export default {
             input_comment:null,
             show_modal:false,
             title:null
-
         }
     },
     created() {
         this.getMessageByIndex();
     },
-    mounted() {
-
+    mounted(){
+        var storage=window.sessionStorage;
+        console.log("this.last_path:"+storage.getItem(this.$route.fullPath));
     },
+    //保存上个页面的地址
+    beforeRouteEnter (to, from, next) {
+        //判断在sessionStorage中是否已存在上一个页面的地址
+        var storage=window.sessionStorage;
+        if(storage.getItem(to.fullPath)==null)
+            storage.setItem(to.fullPath,from.fullPath);
+        next();  
+    },
+    beforeRouteLeave (to, from, next) {
+        var storage=window.sessionStorage;
+        var last_path=storage.getItem(from.fullPath);//上一个页面的地址
+
+        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+            this.$destroy();
+            storage.removeItem(from.fullPath);
+            console.log("viewMsg--destroy");
+        }
+        else{
+            console.log("viewMsg--not destroy");
+        }
+        next();
+    },
+
     methods: {
         //评论组件删除了评论
         deleteComment(){
@@ -211,7 +235,7 @@ export default {
                         "msg_index":this.message.index
                     })
                     .then(response =>{
-                        console.log(response.data);
+                        //console.log(response.data);
                         
                         if(response.data!=null){
                             this.comment=response.data;
@@ -245,7 +269,7 @@ export default {
                         "content":this.input_comment
                     })
                     .then(response =>{
-                        console.log("viewMsg-addComment:"+response.data);
+                        //console.log("viewMsg-addComment:"+response.data);
                         if(response.data=="success"){
                             this.input_comment="";
                             this.getComments();
@@ -274,7 +298,7 @@ export default {
                         "uid":this.login_uid
                     })
                     .then(response=>{
-                        console.log("collect-server:"+response.data);
+                        //console.log("collect-server:"+response.data);
                         
                     })
                     .catch(function(error){
@@ -316,7 +340,7 @@ export default {
                         "uid":this.login_uid
                     })
                     .then(response=>{
-                        console.log("like-server:"+response.data);
+                        //console.log("like-server:"+response.data);
                         
                     })
                     .catch(function(error){
@@ -342,7 +366,7 @@ export default {
 
         //获取该index的帖子信息
         getMessageByIndex() {
-            console.log("viewMsg--getMessage...");
+            //console.log("viewMsg--getMessage...");
             axios
                 .post("/api/getOneMessage?index=" + this.msg_index)
                 .then(response => {
@@ -365,7 +389,7 @@ export default {
 
         //获取发帖人信息
         getMsgUserInfo(uid) {
-            console.log("viewMsg--getMsgUserInfo...");
+            //console.log("viewMsg--getMsgUserInfo...");
             axios
                 .post("/api/getVisitUserInfo?visitUID=" + uid)
                 .then(response => {
@@ -379,7 +403,7 @@ export default {
 
         //从导航栏获取登录信息
         getInfoFromNav(user) {
-            console.log("viewMsg--receieveInfo_from_nav...");
+            //console.log("viewMsg--receieveInfo_from_nav...");
             if (user.UID !== null && user.UID != ""){
                 this.login_uid = user.UID;
                 this.login_name=user.Username;

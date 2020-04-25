@@ -67,6 +67,15 @@ export default {
     created() {
         //this.getInfo();
     },
+    beforeRouteLeave (to, from, next) {
+        if(to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+            this.$destroy();
+            next();
+        }
+        else{
+            next();
+        }
+    },
     methods: {
         //获取个人信息，检查是否已经登录
         getInfo: function (data) {

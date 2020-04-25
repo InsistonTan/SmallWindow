@@ -29,6 +29,8 @@
 <script>
 import VerificationCode from '@/components/functions/verificationCode';
 import axios from "axios";
+
+var last_path=null;//上一个页面的地址，即从什么页面进入登陆页面
 export default {
     name: 'login',
     components: {
@@ -41,11 +43,19 @@ export default {
             input_username: null,
             input_password: null,
             input_code: null,
-            login_result: null
+            login_result: null,
         }
     },
     created(){
         this.getInfo();
+    },
+    mounted(){
+        //console.log("last_path:"+last_path);
+    },
+    beforeRouteEnter (to, from, next) {
+        if(last_path==null)
+            last_path=from.path;
+        next();
     },
     methods: {
         //获取个人信息，检查是否已经登录
@@ -54,7 +64,7 @@ export default {
                 .post("/api/getInfo")
                 .then(response => {
                     if (response.data.UID != null && response.data.UID != "") {
-                        history.back(-1);
+                        window.location.replace("/#/Home/");
                     }
                 })
                 .catch(function (error) {
@@ -88,8 +98,13 @@ export default {
                 .then(response => {
                     //console.log(response);
                     if (response.data == "success"){
-                        // window.location.href = "/#/Home/";
-                        history.back(-1);
+                        if(last_path=="/"){
+                            window.location.replace("/#/Home/");
+                        }
+                        //否则返回上一页
+                        else{
+                            history.back(-1);
+                        }
                     }   
                     else if (response.data == "user not exist") {
                         this.login_result = "用户不存在";
@@ -130,6 +145,7 @@ body {
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 1);
     margin-top: 20px;
 }
@@ -160,6 +176,7 @@ body {
         top: 40%;
         left: 47%;
         transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
         background-color: rgba(255, 255, 255, 1);
         margin-top: 20px;
     }

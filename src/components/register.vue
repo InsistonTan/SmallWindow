@@ -1,35 +1,23 @@
 <template>
 <div>
-    <div class="container" >
+    <div>
         <!-- 标题 -->
-        <div class="register-title" style="text-align: center;">
-            <h2 style="margin-top:-50px;color:rgb(205,133,63);"><span class="my_tilte">小窗户-分享你的生活</span></h2>
+        <div class="register-title">
+            <h2><span class="my_tilte">小窗户-分享你的生活</span></h2>
         </div>
         <!-- 中间的主体-->
-        <div class="rounded shadow_div mid_div">
+        <div class="rounded shadow_div register_mid_div">
             <!-- <form> -->
-                <h5 style="text-align: center;margin: 10px;"><span style="color: rgb(50,50,50);" class="my_text">注册小窗户账号</span></h5>
-                <div class="form-group div-input">
-                    <input class="form-control username" v-model="input_username" type="text" placeholder="请输入用户名" style="text-indent:16px;" required>
-                </div>
-                <div class="form-group div-input">
-                    <input class="form-control password" v-model="input_password1" type="password" placeholder="请输入密码" style="text-indent:16px;" required>
-                </div>
-                <div class="form-group div-input">
-                    <input class="form-control password" v-model="input_password2" type="password" placeholder="确认密码" style="text-indent:16px;" required>
-                </div>
-                <div class="div-input">
-                    <!-- <canvas id="codecanvas" class="codecanvas" height="40" width="80" onclick="creatCode()"></canvas> -->
-                    <VerificationCode height="40" width="80" v-on:getCode="v_code=$event" v-if="showCode==true"></VerificationCode>
-                    <input type="text" class="form-control" placeholder="验证码" v-model="input_code" style="width:80px;margin-top:10px;">
-                    <p style="color: rgb(240,0,0);font-size:12px;margin-left:2px;margin-top:4px;">
-                        {{input_result}}
-                    </p>
-                </div>
-                <div class="div-input">
-                    <button v-on:click="register" style="width: 80px;" class="btn btn-primary">注册</button>
-                </div>
-                <p> </p>
+                <h5 style="text-align: center;margin: 10px;">注册账号</h5>
+                <input class="form-control r_username" v-model="input_username" type="text" placeholder="请输入用户名" style="text-indent:16px;" required>
+                <input class="form-control r_password" v-model="input_password1" type="password" placeholder="请输入密码" style="text-indent:16px;" required>
+                <input class="form-control r_password" v-model="input_password2" type="password" placeholder="确认密码" style="text-indent:16px;" required>
+                <VerificationCode height="40" width="80" v-on:getCode="v_code=$event" v-if="showCode==true"></VerificationCode>
+                <input type="text" class="form-control" placeholder="验证码" v-model="input_code" style="width:80px;margin-top:10px;">
+                <p style="color: rgb(240,0,0);font-size:12px;margin-left:2px;margin-top:4px;">
+                    {{input_result}}
+                </p>
+                <button v-on:click="register" style="width: 80px;" class="btn btn-primary">注册</button>
             <!-- </form> -->
         </div>
         <!-- 1 -->
@@ -154,7 +142,25 @@ export default {
 
 <style>
 @import url("../lib/css/shadow.css");
-@import url("../lib/css/index.css");
+.r_username{
+	border-radius: 4px;
+	margin-top:10px;
+	width:99.5%;
+	height: 40px;
+	/* border: 1px solid ;  */
+	background:url('../assets/account.png') 8px 10px no-repeat;
+	padding-left: 32px; 
+}
+.r_password{
+	margin-top:10px;
+	width:99.5%;
+	height: 40px;
+	border-radius: 4px;
+	/* border-radius:4px; */
+	/* border: 1px solid ;  */
+	background:url('../assets/password.png') 8px 10px no-repeat;
+	padding-left: 32px; 
+}
 
 body {
     background: rgb(245,245,245);
@@ -163,21 +169,30 @@ body {
     background-attachment: fixed; */
 }
 
-.mid_div {
+.register_mid_div {
     position: fixed;
     top: 10%;
-    left: 40%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     width: 300px;
-    height: 400px;
-    transform: translate(-50%, -50%);
+    padding: 20px;
+    padding-top: 5px;
+    /* height: 400px; */
+    /* transform: translate(-50%, -50%); */
     background-color: rgba(255, 255, 255, 1);
-    margin-top: 20px;
 }
-
+.register-title{
+        text-align: center;
+        margin-top:-50px;
+        color:rgb(205,133,63);
+}
 @media screen and (max-width: 500px){
     .register-title{
-        /* padding-bottom:165%; */
-        padding-bottom:0%;
+        margin-top: -50px;
+        color:rgb(205,133,63);
+        text-align: center;
+        width: 100%;
     }
     body {
         background: rgb(245,245,245);
@@ -186,15 +201,14 @@ body {
         background-attachment: fixed; */
         
     }
-    .mid_div {
-        position: fixed;
-        top: 40%;
-        left: 50%;
+    .register_mid_div {
         width: 80%;
-        height: 400px;
-        transform: translate(-50%, -50%);
+        position: fixed;
+        top:10%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
         background-color: rgba(255, 255, 255, 1);
-        margin-top: 20px;
     }
 
 }
