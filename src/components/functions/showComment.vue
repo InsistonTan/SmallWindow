@@ -2,12 +2,15 @@
     <div>
         <div v-for="data in comments" :key="data.id" class="comment_div" v-if="data.id!=null">
             <div id="name">
-                <img src="../../assets/user2.png" alt="user" style="width:15px;height:15px;">
-                <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" v-if="msg_uid==data.uid"
+                <router-link :to="{path:'/Visit/',query:{uid:data.uid}}">
+                    <img v-if="data.headImg==null" src="../../assets/user2.png" alt="user" style="width:26px;height:26px;">
+                    <img v-else class="showComm_headImg" :src="data.headImg" alt="头像">
+                </router-link>
+                <router-link v-if="msg_uid==data.uid" :to="{path:'/Visit/',query:{uid:data.uid}}"
                     style='color:rgb(205,133,63);text-decoration:none;'>
                     {{data.username}}
                 </router-link>
-                <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" v-else style='text-decoration:none;'>
+                <router-link v-else :to="{path:'/Visit/',query:{uid:data.uid}}" style='text-decoration:none;'>
                     {{data.username}}
                 </router-link>
             </div>
@@ -60,6 +63,11 @@ export default {
 }
 </script>
 <style>
+    .showComm_headImg{
+        width: 26px;
+        height: 26px;
+        border-radius: 13px;
+    }
     .com_content{
         margin:5px;
         padding-bottom:0px;

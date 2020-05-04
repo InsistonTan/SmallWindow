@@ -6,11 +6,11 @@
     </div>
     <div v-else>
         <div class="snav-float-left" :class="{'snav-active':select=='关注'}" @click="action('关注')">关注</div>
+        <div class="snav-float-left" :class="{'snav-active':select=='热门'}" @click="action('热门')">热门</div> 
+        <div class="snav-float-left" :class="{'snav-active':select=='最新'}" @click="action('最新')">最新</div>
         <div class="snav-float-left" :class="{'snav-active':select=='点赞'}" @click="action('点赞')">点赞</div>
         <div class="snav-float-left" :class="{'snav-active':select=='评论'}" @click="action('评论')">评论</div>
         <div class="snav-float-left" :class="{'snav-active':select=='收藏'}" @click="action('收藏')">收藏</div>
-        <div class="snav-float-left" :class="{'snav-active':select=='热门'}" @click="action('热门')">热门</div> 
-        <div class="snav-float-left" :class="{'snav-active':select=='最新'}" @click="action('最新')">最新</div>
     </div>
     
 </div>
@@ -96,7 +96,8 @@ export default {
     padding: 6px;
     padding-left: 8px;
     padding-right: 8px;
-    margin: 5px;
+    
+    margin-left: 5px;
     border-radius: 4px;
 }
 .snav-float-left:hover{

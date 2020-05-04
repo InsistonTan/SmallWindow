@@ -79,7 +79,10 @@
         <div class="viewMsg_content shadow_div rounded">
             <!-- 用户名div -->
             <div id='Username' style='font-size:18px;margin-left:10px;padding-top:6px;'>
-                <img src='../../assets/user2.png' alt='account' style='width: 30px;height: 30px;'>
+                <router-link :to="{path:'/Visit/',query:{uid:message.uid}}">
+                    <img v-if="message.headImg==null" src='../../assets/user2.png' alt='account' style='width: 30px;height: 30px;'>
+                    <img v-else class="viewMsg_headImg" :src='message.headImg' alt='account'>
+                </router-link>
                 <router-link :to="{path:'/Visit/',query:{uid:message.uid}}" class='font_shadow' style='color:rgb(205,133,63);text-decoration:none;margin-left:2px;'>
                     {{message.user}}
                 </router-link>
@@ -211,7 +214,7 @@ export default {
         var storage=window.sessionStorage;
         var last_path=storage.getItem(from.fullPath);//上一个页面的地址
 
-        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"||to.name=="login"||to.name=="register"){
             this.$destroy();
             storage.removeItem(from.fullPath);
             console.log("viewMsg--destroy");
@@ -471,7 +474,11 @@ body {
         background-repeat: no-repeat;
         background-attachment: fixed; */
 }
-
+.viewMsg_headImg{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
 .msg_content{
     margin:10px;
     font-size:18px;

@@ -48,7 +48,7 @@
         <hr id="index-hr" style="height:0px;">
         <!-- 展示最新的帖子 -->
         <div id="index-showMsg-div">
-            <div v-if="messages==null" style="text-align:center;">加载数据中{{change_text}}</div>
+            <div v-if="messages==null" style="text-align:center;font-size:20px;"><b>{{change_text}}</b></div>
             <ShowMessages v-else v-bind:messages="messages" uid=""></ShowMessages>
         </div>
     </div>
@@ -108,7 +108,7 @@ export default {
             v_code: null,
             login_result: null,
             messages: null,
-            change_text:'.'
+            change_text:''
         }
     },
     created(){
@@ -117,10 +117,8 @@ export default {
     },
     mounted() {
         console.log("index--mounted..");
-        console.log("index-meta-keepAlive: "+this.$route.meta.keepAlive);
         this.load_animation();
         this.getNewMessage();
-        //this.getTopMsg();
     },
     beforeRouteLeave (to, from, next) {
         if(to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
@@ -136,6 +134,7 @@ export default {
         second_nav_select(data){
             $("body,html").scrollTop(0);
             this.messages=null;
+            this.change_text="";
             this.load_animation();
             if(data=="最新"){
                 //alert(data);
@@ -152,7 +151,13 @@ export default {
         },
         //动态的...
         change_pointer(){
-            if(this.change_text=="."){
+            if(this.change_text==""){
+                this.change_text=".";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="."){
                 this.change_text="..";
                 if(this.messages==null){
                     setTimeout(this.change_pointer,300);
@@ -165,7 +170,7 @@ export default {
                 }
             }
             else if(this.change_text=="..."){
-                this.change_text=".";
+                this.change_text="";
                 if(this.messages==null){
                     setTimeout(this.change_pointer,300);
                 }

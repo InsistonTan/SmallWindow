@@ -3,17 +3,13 @@
     <div class='rounded message_div shadow_div' v-for="data in messages" v-bind:key="data.index" >
         <div >
             <div id='Username' style='font-size:16px;margin-left:10px;padding-top:6px;'>
-                <img src='../../assets/user2.png' alt='account' style='width: 18px;height: 18px;'>
+                <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" class='font_shadow'>
+                    <img v-if="data.headImg==null" src='../../assets/user2.png' alt='account' style='width: 20px;height: 20px;'>
+                    <img v-else class="showMsg_headImg" :src="data.headImg" alt="头像">
+                </router-link>
                 <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" class='font_shadow' style='color:rgb(205,133,63);text-decoration:none;margin-left:2px;'>
                     {{data.user}}
                 </router-link>
-                <!-- <a href='#' class='font_shadow' style='color:rgb(205,133,63);text-decoration:none;margin-left:2px;'>
-                    {{data.user}}
-                </a> -->
-                <!-- <button class='close' type='button' style='margin-right:4px;margin-top:-6px;' v-if="uid==data.uid" 
-                @click="show_deleteModal(data.index)" title="点击删除">
-                    <span v-html="">&times</span> 
-                </button> -->
             </div>
             <div class="clickMsg_div" @click="seeMessage(data)" title="点击查看详情">
                 <div id='time' style='font-size:10px;margin-left:10px;'>
@@ -231,7 +227,11 @@ export default {
 
 <style>
 @import url("../../lib/css/shadow.css");
-
+.showMsg_headImg{
+    width: 26px;
+    height: 26px;
+    border-radius: 13px;
+}
 .view:hover,
 .like:hover,
 .comment:hover,

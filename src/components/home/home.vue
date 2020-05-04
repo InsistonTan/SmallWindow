@@ -10,7 +10,9 @@
         <LeftNav :uid="uid"></LeftNav>
         <p></p>
     </div>
+     <!-- 中间的主体 -->
     <!-- 中间的主体 -->
+    
     <div id="home-mid-div" >
         <!-- 发表帖子的输入框 -->
         <div id="home-input-div" style="">
@@ -25,11 +27,12 @@
         <div id="home-secondNav">
             <SecondNav :login_uid="'00000'" :select_item="select_item" @clear_select="clear_select" @getSelect="second_nav_select($event)"></SecondNav>
         </div>
-        <hr id="home-hr" style="height:10px;">
+        <div id="home-text-latestMsg" style="text-align:center;">最新动态</div>
+        <hr id="home-hr" style="height:10px;margin-top:5px;">
         <!-- 展示帖子 -->
         <div id="MessageBody">
-            <div v-if="messages==null||messages==[]" style="text-align:center;margin-top:10px;">加载数据中{{change_text}}</div>
-            <div v-else-if="messages.length<1" style="text-align:center;margin-top:10px;">暂无数据</div>
+            <div v-if="messages==null" style="text-align:center;margin-top:10px;font-size:20px;"><b>{{change_text}}</b></div>
+            <div v-else-if="messages.length==0" style="text-align:center;margin-top:10px;">暂无数据</div>
             <ShowMessages v-else v-bind:messages="messages" v-bind:uid="uid" @reload="getFollowMessages"></ShowMessages>
         </div>
     </div>
@@ -37,15 +40,15 @@
     <div id="home-right-div" style="width:30%;float:left;">
         <div class="rounded infoShow shadow_div">
             <div style="text-align:center; padding-top:15px;">
-                <a href="#"><img src="../../assets/bigUser.png" alt="账号图片"></a>
+                <router-link :to="{path:'/Visit/',query:{uid:uid}}">
+                    <img v-if="headImg==null" src="../../assets/bigUser.png" alt="头像">
+                    <img v-else style="width:60px;height:60px;border-radius:30px;" :src="headImg" alt="头像">
+                </router-link>
             </div>
             <div style="text-align:center;">
-                <router-link :to="{path:'/Visit/',query:{uid:uid}}" class="font_shadow" style="text-decoration:none;color:rgb(205,133,63);">
+                <router-link :to="{path:'/Visit/',query:{uid:uid}}" class="font_shadow" style="text-decoration:none;color:rgb(205,133,63);font-size:18px;">
                     {{username}}
                 </router-link>
-                <!-- <a id="username" class="font_shadow" href="#" style="text-decoration:none;color:rgb(205,133,63);">
-                    {{username}}
-                </a> -->
             </div>
             <hr>
             <div style="padding-top:5px;text-align:center;padding-bottom:15px;">
@@ -111,13 +114,15 @@ export default {
             follow_num: 0,
             fan_num: 0,
             message_num: 0,
-            messages: [],
+            messages: null,
             input_content: null,
             submit_result: null,
             show_modal: false,
             title: null,
             select_item:null,//副导航栏选择
-            change_text:'.'
+            change_text:'',
+            headImg:null
+            //getMsg_ing:false
         }
     },
     created() {
@@ -144,7 +149,13 @@ export default {
         },
         //动态的...
         change_pointer(){
-            if(this.change_text=="."){
+            if(this.change_text==""){
+                this.change_text=".";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="."){
                 this.change_text="..";
                 if(this.messages==null){
                     setTimeout(this.change_pointer,300);
@@ -157,7 +168,7 @@ export default {
                 }
             }
             else if(this.change_text=="..."){
-                this.change_text=".";
+                this.change_text="";
                 if(this.messages==null){
                     setTimeout(this.change_pointer,300);
                 }
@@ -167,6 +178,7 @@ export default {
         second_nav_select(data){
             $("body,html").scrollTop(0);
             this.messages=null;
+            this.change_text="";
             this.load_animation();
             //document.documentElement.scrollTop=190;//不需要加单位
             if(data=="最新"){
@@ -262,7 +274,6 @@ export default {
         //获取个人信息，检查是否已经登录
         getInfo: function (data) {
             console.log("home--receieve info");
-
             //this.user=data;
             if (data.UID == null || data.UID == "") {
                 this.title = "你还未登陆,请先登陆";
@@ -274,6 +285,8 @@ export default {
                 this.follow_num = data.followNum;
                 this.fan_num = data.fanNum;
                 this.message_num = data.messageNum;
+                if(data.headImg!=null)
+                    this.headImg=data.headImg;
             }
 
             // axios
@@ -300,6 +313,8 @@ export default {
             axios
                 .post("/api/getFollowMessage")
                 .then(response => {
+                    //console.log(response.data);
+                    
                     this.messages = response.data;
                 })
                 .catch(function (error) {
@@ -426,17 +441,14 @@ body {
 #home-input-div{
     margin-top:20px;
 }
-/* #home-secondNav{
-    display: none;
-} */
 #home-secondNav{
-        z-index: 2;
-        position: sticky;
-        top:45px;
-        width: 100%;
-        display:block; 
-    }
+    display: none;
+} 
+
 @media screen and (max-width: 500px) {
+    #home-text-latestMsg{
+        display: none;
+    }
     #home-secondNav{
         z-index: 2;
         position: sticky;

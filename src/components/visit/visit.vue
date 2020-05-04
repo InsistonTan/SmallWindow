@@ -5,10 +5,23 @@
     <!-- 下方主体-->
     <div id="visit-container">
         <div id="topDiv" style="width:100%;text-align:center;">
+            <!-- 头像 -->
             <div style="padding-top: 20px;">
-                <img src="../../assets/bigUser.png" alt="头像">
+                <img v-if="uid!=login_uid&&headImg==null" src="../../assets/bigUser.png" alt="头像">
+                <img v-if="uid!=login_uid&&headImg!=null" style="width:60px;height:60px;border-radius:30px;" :src="headImg" alt="头像">
+                <!-- 1 -->
+                <img v-if="uid==login_uid&&headImg==null" class="change_headimg" src="../../assets/bigUser.png"  alt="头像">
+                <img v-if="uid==login_uid&&headImg!=null" class="change_headimg" :src="headImg" alt="头像" >
+                <input v-if="uid==login_uid" id="photoFile" @change="uploadPhoto" type="file" accept="image/png,image/gif,image/jpeg" style="display:none;">
             </div>
-            <div id="username" style="padding-top:5px;font-size:17px;color:rgb(185,113,43);">
+            <!-- 修改头像 -->
+            <div class="text-info" style="font-size:13px;margin-top:4px;">{{update_headImg_statu}}</div>
+            <div>
+                <button v-if="uid==login_uid" class='btn btn-outline-success btn-sm update_headImg' @click="openFileSelect" title="点击修改头像">修改头像</button>
+            </div>
+
+            <!-- 用户信息 -->
+            <div id="username" style="padding-top:5px;font-size:20px;color:rgb(185,113,43);">
                 <b>{{username}}</b>
             </div>
             <div v-if="uid!=login_uid">
@@ -19,7 +32,7 @@
                     <button class='btn btn-outline-success btn-sm followed_btn' disabled>已关注</button>
                 </div>
             </div>
-            <div style="padding-top:8px;text-align:center;font-size:14px;">
+            <div style="padding-top:8px;text-align:center;font-size:16px;">
                 <span class="infoText" style="margin-left:-5px;"><b>关注</b></span>
                 <span>
                     <b v-if="uid==login_uid">
@@ -60,11 +73,11 @@
                     </b>
                 </span>
             </div>
-            <div id="info" style="font-size:13px;padding-top:5px;">
+            <div id="info" style="font-size:14px;padding-top:5px;">
                 <span>性别：<span>{{sex}}</span></span>
                 <span style="margin-left:20px;">年龄：<span>{{age}}</span></span>
             </div>
-            <div style="padding-top:5px;font-size:12px;">
+            <div style="padding-top:5px;font-size:14px;">
                 <span id="introduce">{{introduce}}</span>
                 <span style="text-decoration:none;" class="edit_link" v-if="login_uid==uid" @click="openEdit">{{edit_link}}</span>
             </div>
@@ -85,7 +98,7 @@
                 <div class="form-group" style="margin-top:-10px;">
                     <label >一句话自我介绍：</label>
                     <br>
-                    <textarea id="introduce_input" cols="30" rows="3" v-model="introduce"></textarea>
+                    <textarea id="introduce_input" cols="24" rows="3" v-model="introduce"></textarea>
                 </div>
                 <div style="margin-top:-10px;">
                     <button class="btn btn-primary btn-sm follow_btn" type="button" @click="updateInfo">确认</button>
@@ -101,7 +114,9 @@
             </div>
             <div id="visit-midContent">
                 <hr>
-                <ShowMessages :messages="messages" :uid="login_uid" @reload="reload"></ShowMessages>
+                <div v-if="messages==null" style="text-align:center;margin-top:10px;font-size:20px;"><b>{{change_text}}</b></div>
+                <div v-else-if="messages.length==0" style="text-align:center;margin-top:10px;">暂无数据</div>
+                <ShowMessages v-else :messages="messages" :uid="login_uid" @reload="reload"></ShowMessages>
             </div>
             <div id="visit-rightContent" style="width:30%;float:left;">
                 <p> </p>
@@ -130,6 +145,7 @@ export default {
             uid: this.$route.query.uid,
             login_uid: null,
             username: 'Username',
+            headImg:null,
             follow_num: 0,
             fan_num: 0,
             message_num: 0,
@@ -142,7 +158,9 @@ export default {
             title: null,
             show_edit: false,
             edit_link: "编辑",
-            update_result:null
+            update_result:null,
+            update_headImg_statu:null,
+            change_text:'.'
         }
     },
     created() {
@@ -150,6 +168,7 @@ export default {
         this.getInfo_server();
     },
     mounted(){
+        this.load_animation();
         this.getMessages();
     },
     //保存上个页面的地址
@@ -162,7 +181,7 @@ export default {
     beforeRouteLeave (to, from, next) {
         var storage=window.sessionStorage;
         var last_path=storage.getItem(from.fullPath);
-        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"){
+        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"||to.name=="login"||to.name=="register"){
             this.$destroy();
             storage.removeItem(from.fullPath);
             console.log("visit--destroy");
@@ -173,6 +192,71 @@ export default {
         next();
     },
     methods: {
+        //...的动画效果
+        load_animation(){
+            setTimeout(this.change_pointer,300);
+        },
+        //动态的...
+        change_pointer(){
+            if(this.change_text==""){
+                this.change_text=".";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="."){
+                this.change_text="..";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text==".."){
+                this.change_text="...";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="..."){
+                this.change_text="";
+                if(this.messages==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }   
+        },
+        //打开文件选择器
+        openFileSelect(){
+            $("#photoFile").click();
+        },
+        //上传头像文件
+        uploadPhoto(){
+            this.update_headImg_statu="上传头像中...";
+            //
+            var select_file=document.getElementById("photoFile").files[0];
+            console.log("文件名:"+select_file.name+"大小:"+select_file.size);
+            var formData=new FormData();
+            formData.append("headImg",select_file);
+            formData.append("type","HeadImg");
+            //
+            axios 
+                .post("/api/uploadHeadImg",formData,{
+                    headers:{'Content-Type':'multipart/form-data'}
+                })
+                .then(response =>{
+                    console.log(response.data);
+                    if(response.data.type=="success"){
+                        this.update_headImg_statu="上传成功！";
+                        this.getInfo_server();
+                        this.getMessages();
+                    }
+                    else{
+                        this.update_headImg_statu="上传失败,"+response.data.msg;
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                })
+
+        },
         //刷新messages
         reload(){
             this.getMessages();
@@ -237,6 +321,7 @@ export default {
         },
         //获取帖子
         getMessages() {
+            this.messages=null;
             axios
                 .post("/api/getVisitMessage?visitUID="+this.uid)
                 .then(response =>{
@@ -268,6 +353,8 @@ export default {
                             this.introduce = res.introduce;
                         if (res.isFollowed == 1)
                             this.followed = true;
+                        if(res.headImg!=null)
+                            this.headImg=res.headImg;
                     }
                 })
                 .catch(function (error) {
@@ -315,6 +402,17 @@ export default {
     #visit-container{
         margin-top:50px;
     }
+    #introduce_input{
+        margin-left: 0%;
+    }
+    .change_headimg{
+        width:60px;
+        height:60px;
+        border-radius: 30px;
+    }
+    .change_headimg:hover{
+        cursor: pointer;
+    }
     .edit_link{
         color:dodgerblue;
     }
@@ -324,23 +422,29 @@ export default {
     }
     .edit_div {
         text-align: center;
-        width: 40%;
-        margin-left: 30%;
-        font-size: 12px;
+        /* width: 40%;
+        margin-left: 30%; */
+        font-size: 14px;
     }
 
     .infoText {
-        font-size: 13px;
+        font-size: 16px;
         margin-left: 20px;
     }
 
     .follow_btn {
-        width: 40px;
-        height: 26px;
-        font-size: 11px;
+        width: 60px;
+        height: 30px;
+        font-size: 14px;
         margin-top: 6px;
     }
-
+    .update_headImg{
+        padding: 0px;
+        width: 70px;
+        height: 26px;
+        font-size: 12px;
+        margin-top: 6px;
+    }
     .followed_btn {
         width: 55px;
         height: 26px;

@@ -1,11 +1,15 @@
 <template>
 <div>
     <div class='rounded shadow_div main_div' v-for="user in users" v-bind:key="user.UID" v-if="user.UID!=null">
-        <img src='../../assets/user2.png' alt='user' style='margin:4px;'>
+        <router-link :to="{path:'/Visit/',query:{uid:user.UID}}">
+            <img v-if="user.headImg==null" src='../../assets/user2.png' alt='user' style='margin:4px;'>
+            <img v-else class="showUser_headImg" :src='user.headImg' alt='user' style='margin:4px;'>
+        </router-link>
         <!-- <b><a href='#' style='text-decoration: none;'>{{user.Username}}</a></b> -->
         <b><router-link id="showUser-name" :to="{path:'/Visit/',query:{uid:user.UID}}" style="text-decoration:none;">
             {{user.Username}}
         </router-link></b>
+        
         <button type='button' class='btn btn-outline-success btn-sm follow_btn1' v-if="user.isFollowed==0&&user.UID!=uid" 
                 v-on:click='follow(user.UID);user.isFollowed=1;'>
             关注
@@ -88,6 +92,11 @@ export default {
 
 <style>
     @import url("../../lib/css/shadow.css");
+    .showUser_headImg{
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+    }
     .main_div{
         padding: 10px;
         margin-top:10px;

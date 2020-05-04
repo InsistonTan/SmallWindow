@@ -24,15 +24,18 @@
         
 
         <div class="div-float-right" id="changeNav" v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
-            <a class="nav-link font_shadow navText" href="#" style='margin-left:-20px;' v-on:click="safe_exit">
+            <a class="nav-link font_shadow navText" :class="{'margin_top_5px':headImg!=null}" href="#" style='margin-left:-20px;' v-on:click="safe_exit">
                 退出
             </a>
         </div>
         <div class="div-float-right" v-if="uid!=null&&uid!=''" style="background:rgba(255,255,255,0);">
-            <router-link :to="{path:'/Visit/',query:{uid:uid}}" class="nav-link font_shadow nav_user" style='color:rgb(205,133,63);'>
-                <img src="../../assets/user.png" alt="user" style="width: 20px;height: 20px;" class="nav-user-img">
-                <span class="nav-user-text">
+            <router-link :to="{path:'/Visit/',query:{uid:uid}}" class="nav-link font_shadow " style='color:rgb(205,133,63);'>
+                <!-- <img src="../../assets/user.png" alt="user" style="width: 20px;height: 20px;" class="nav-user-img"> -->
+                <span v-if="headImg==null" class="nav-user-text">
                     {{username}}
+                </span>
+                <span v-else>
+                    <img class="headNav_headImg" :src="headImg" alt="头像">
                 </span>
             </router-link>
         </div>
@@ -56,6 +59,7 @@ export default {
         return {
             uid: null,
             username: null,
+            headImg:null,
             input_search: null
         }
     },
@@ -75,6 +79,8 @@ export default {
                     if (response.data.UID != null && response.data.UID != "") {
                         this.uid = response.data.UID;
                         this.username = response.data.Username;
+                        if(response.data.headImg!=null)
+                            this.headImg=response.data.headImg;
                     }
                     this.$emit("getInfo", response.data);
                 })
@@ -128,6 +134,11 @@ export default {
 <style>
 @import url("../../lib/css/shadow.css");
 
+.headNav_headImg{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
 .div-float-left {
     float: left;
 }
@@ -245,6 +256,9 @@ export default {
         font-size: 13px;
         color: rgb(100, 100, 100);
         margin-top: 2px;
+    }
+    .margin_top_5px{
+        margin-top: 5px;
     }
 
     .nav-home-img {

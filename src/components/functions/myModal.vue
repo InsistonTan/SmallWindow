@@ -13,7 +13,7 @@
             </div> -->
             <div class="footer">
                 <button class="confirm mbtn" @click="confirm">确认</button>
-                <button class="cancel mbtn" @click="close">取消</button>
+                <button class="cancel mbtn" @click="close">关闭</button>
             </div>
         </div>
         </transition>
