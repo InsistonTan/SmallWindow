@@ -1,5 +1,5 @@
 <template>
-<div :key="this.$route.fullPath">
+<div :key="this.$route.fullPath" >
     <!-- 顶部导航栏 -->
     <div>
         <HeadNav @getInfo="getInfoFromNav($event)"></HeadNav>
@@ -7,9 +7,14 @@
     <!-- 左边发帖人信息div -->
     <div id="viewMsg-left-div" style="width:30%;float:left;">
         <div class="msgUserInfo shadow_div">
+            <!-- 头像 -->
             <div style="padding-top: 20px;">
-                <img src="../../assets/bigUser.png" alt="头像">
+                <router-link :to="{path:'/Visit/',query:{uid:message.uid}}" style="text-decoration:none;color:rgb(185,113,43);">
+                    <img v-if="msg_user.headImg==null" src="../../assets/bigUser.png" alt="头像">
+                    <img v-else style="width:60px;height:60px;border-radius:30px;" :src="msg_user.headImg" alt="头像">
+                </router-link>
             </div>
+            <!-- 用户名 -->
             <div id="username" style="padding-top:5px;font-size:17px;color:rgb(185,113,43);">
                 <router-link :to="{path:'/Visit/',query:{uid:message.uid}}" style="text-decoration:none;color:rgb(185,113,43);">
                     {{msg_user.Username}}
@@ -17,11 +22,11 @@
                 <!-- <b>{{msg_user.Username}}</b> -->
             </div>
             <div v-if="msg_user.UID!=login_uid">
-                <div v-if="msg_user.followed==false">
-                    <button class='btn btn-outline-success btn-sm follow_btn' @click="follow">关注</button>
+                <div v-if="msg_user.isFollowed!=1">
+                    <button class='btn btn-outline-success btn-sm viewMsg-follow_btn1' @click="follow">关注</button>
                 </div>
-                <div v-else-if="msg_user.followed==true">
-                    <button class='btn btn-outline-success btn-sm followed_btn' disabled>已关注</button>
+                <div v-else-if="msg_user.isFollowed==1">
+                    <button class='btn btn-outline-success btn-sm viewMsg-follow_btn2' @click="cancelFollow">取消关注</button>
                 </div>
             </div>
             <div style="padding-top:8px;text-align:center;font-size:14px;">
@@ -51,7 +56,7 @@
                         </router-link>
                     </b>
                 </span>
-                <span class="infoText"><b>帖子</b></span>
+                <span class="infoText"><b>小窗</b></span>
                 <span>
                     <b v-if="message.uid==login_uid">
                         <router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
@@ -76,7 +81,7 @@
     </div>
     <!-- 中间帖子详情div -->
     <div id="viewMsg-mid-div">
-        <div class="viewMsg_content shadow_div rounded">
+        <div class="viewMsg_content rounded">
             <!-- 用户名div -->
             <div id='Username' style='font-size:18px;margin-left:10px;padding-top:6px;'>
                 <router-link :to="{path:'/Visit/',query:{uid:message.uid}}">
@@ -99,7 +104,7 @@
                 </div>
             </div>
             <!-- 帖子内容div -->
-            <div class="rounded msg_content" >
+            <div class="rounded msg_content">
                 {{message.content}}
             </div>
             <div class="bigIcon_div">
@@ -115,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="viewMsg_commit shadow_div">
+        <div class="viewMsg_commit ">
             <h6 style="text-align:center;">评论<span>({{message.comment}})</span></h6>
             <div v-if="message.comment==0" style="text-align:center;margin-top:20px;font-size:16px;">
                 <p>暂无评论</p>
@@ -133,7 +138,7 @@
                 </textarea>
                 <br>
                 <button type="button" class="btn_submit" @click="addComment">回复</button>
-            </div> 
+            </div>
         </div>
     </div>
     <!-- 移动端的回复框 -->
@@ -163,9 +168,9 @@ export default {
     data() {
         return {
             login_uid: null,
-            login_name:null,
+            login_name: null,
             msg_index: this.$route.query.index,
-            comment:null,
+            comment: null,
             message: {
                 'index': null,
                 'uid': null,
@@ -185,185 +190,226 @@ export default {
                 'sex': '男',
                 'age': '0',
                 'introduce': 'introduce',
-                'isFollowed': null,
+                'isFollowed': 0,
                 'followNum': '0',
                 'fanNum': '0',
-                'messageNum': '0'
+                'messageNum': '0',
+                'headImg': null
             },
-            input_comment:null,
-            show_modal:false,
-            title:null
+            input_comment: null,
+            show_modal: false,
+            title: null,
         }
     },
     created() {
         this.getMessageByIndex();
     },
-    mounted(){
-        var storage=window.sessionStorage;
-        console.log("this.last_path:"+storage.getItem(this.$route.fullPath));
+    mounted() {
+        var storage = window.sessionStorage;
+        console.log("this.last_path:" + storage.getItem(this.$route.fullPath));
     },
     //保存上个页面的地址
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
         //判断在sessionStorage中是否已存在上一个页面的地址
-        var storage=window.sessionStorage;
-        if(storage.getItem(to.fullPath)==null)
-            storage.setItem(to.fullPath,from.fullPath);
-        next();  
+        var storage = window.sessionStorage;
+        if (storage.getItem(to.fullPath) == null)
+            storage.setItem(to.fullPath, from.fullPath);
+        next();
     },
-    beforeRouteLeave (to, from, next) {
-        var storage=window.sessionStorage;
-        var last_path=storage.getItem(from.fullPath);//上一个页面的地址
+    beforeRouteLeave(to, from, next) {
+        var storage = window.sessionStorage;
+        var last_path = storage.getItem(from.fullPath); //上一个页面的地址
 
-        if(to.fullPath==last_path||to.name=="index"||to.name=="home"||to.name=="search"||to.name=="multiPage"||to.name=="login"||to.name=="register"){
+        if (to.fullPath == last_path || to.name == "index" || to.name == "home" || to.name == "search" || to.name == "multiPage" || to.name == "login" || to.name == "register") {
             this.$destroy();
             storage.removeItem(from.fullPath);
             console.log("viewMsg--destroy");
-        }
-        else{
+        } else {
             console.log("viewMsg--not destroy");
         }
         next();
     },
 
     methods: {
+        //关注
+        follow: function () {
+            if (this.login_uid == null || this.login_uid == "") {
+                //alert("你还未登录");
+                this.title = "你还未登陆,请先登陆";
+                this.showModal = true;
+                //location.href="/";
+                return;
+            }
+            //axios请求增加关注
+            axios
+                .post("/api/addFollow", {
+                    "myUID": this.login_uid,
+                    "targetUID": this.msg_user.UID
+                })
+                .then(response => {
+                    if (response.data == "success")
+                        this.msg_user.isFollowed = 1;
+                    else {
+                        this.title = "关注失败";
+                        this.showModal = true;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        //取消关注
+        cancelFollow(){
+            axios
+                .post("/api/cancelFollow",{
+                    "targetUID":this.msg_user.UID
+                })
+                .then(response =>{
+                    console.log("viewMsg--cancelFollow:"+response.data);
+                    if(response.data=="success"){
+                        this.msg_user.isFollowed=0;
+                    }    
+                    else alert("取消关注失败");
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //评论组件删除了评论
-        deleteComment(){
+        deleteComment() {
             this.message.comment--;
         },
         //获取帖子评论
-        getComments(){
-            if(this.message.index!=null){
+        getComments() {
+            if (this.message.index != null) {
                 axios
-                    .post("/api/getMsgComments",{
-                        "msg_index":this.message.index
+                    .post("/api/getMsgComments", {
+                        "msg_index": this.message.index
                     })
-                    .then(response =>{
+                    .then(response => {
                         //console.log(response.data);
-                        
-                        if(response.data!=null){
-                            this.comment=response.data;
+
+                        if (response.data != null) {
+                            this.comment = response.data;
                         }
                     })
-                    .catch(function(error){
+                    .catch(function (error) {
                         console.log(error);
                     });
             }
         },
         //评论组件点击回复按钮
-        comment_reply(reply_name){
-            this.input_comment="@"+reply_name+" ";
+        comment_reply(reply_name) {
+            this.input_comment = "@" + reply_name + " ";
             $("#viewMsg-mobile-input").focus();
         },
         //右侧回复评论
-        addComment(){
-            if(this.login_uid==null||this.login_uid==""){
-                this.title="你还未登陆,请先登陆";
-                this.show_modal=true;
+        addComment() {
+            if (this.login_uid == null || this.login_uid == "") {
+                this.title = "你还未登陆,请先登陆";
+                this.show_modal = true;
                 return;
             }
-            if(this.input_comment==null||this.input_comment==""){
-                this.title="输入内容为空,请检查";
-                this.show_modal=true;
-            }
-            else{
+            if (this.input_comment == null || this.input_comment == "") {
+                this.title = "输入内容为空,请检查";
+                this.show_modal = true;
+            } else {
                 axios
-                    .post("/api/addComment",{
-                        "msg_index":this.message.index,
-                        "content":this.input_comment
+                    .post("/api/addComment", {
+                        "msg_index": this.message.index,
+                        "content": this.input_comment
                     })
-                    .then(response =>{
+                    .then(response => {
                         //console.log("viewMsg-addComment:"+response.data);
-                        if(response.data=="success"){
-                            this.input_comment="";
+                        if (response.data == "success") {
+                            this.input_comment = "";
                             this.getComments();
                             this.message.comment++;
                         }
                     })
-                    .catch(function(error){
+                    .catch(function (error) {
                         console.log(error);
                     });
-            }          
+            }
         },
         //点击收藏按钮
-        click_collect(data){
+        click_collect(data) {
             //alert("click_collect");
-            if(this.login_uid==null||this.login_uid==""){
-                this.title="你还未登陆,请先登陆";
-                this.show_modal=true;
+            if (this.login_uid == null || this.login_uid == "") {
+                this.title = "你还未登陆,请先登陆";
+                this.show_modal = true;
                 return;
-            }
-            else{
+            } else {
                 //收藏
-                if(data.collected!=1){
-                    axios 
-                    .post("/api/addCollect",{
-                        "msg_index":data.index,
-                        "uid":this.login_uid
-                    })
-                    .then(response=>{
-                        //console.log("collect-server:"+response.data);
-                        
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+                if (data.collected != 1) {
+                    axios
+                        .post("/api/addCollect", {
+                            "msg_index": data.index,
+                            "uid": this.login_uid
+                        })
+                        .then(response => {
+                            //console.log("collect-server:"+response.data);
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
                 //取消收藏
-                else{
-                    axios 
-                    .post("/api/cancelCollect",{
-                        "msg_index":data.index
-                    })
-                    .then(response=>{
-                        console.log("cancel_collect-server:"+response.data);
-                        
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+                else {
+                    axios
+                        .post("/api/cancelCollect", {
+                            "msg_index": data.index
+                        })
+                        .then(response => {
+                            console.log("cancel_collect-server:" + response.data);
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
-                    
+
             }
         },
 
         //点击点赞按钮
-        click_like(data){
+        click_like(data) {
             //alert("click_like");
-            if(this.login_uid==null||this.login_uid==""){
-                this.title="你还未登陆,请先登陆";
-                this.show_modal=true;
+            if (this.login_uid == null || this.login_uid == "") {
+                this.title = "你还未登陆,请先登陆";
+                this.show_modal = true;
                 return;
-            }
-            else{
+            } else {
                 //点赞
-                if(data.liked!=1){
-                    axios 
-                    .post("/api/addLike",{
-                        "msg_index":data.index,
-                        "uid":this.login_uid
-                    })
-                    .then(response=>{
-                        //console.log("like-server:"+response.data);
-                        
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+                if (data.liked != 1) {
+                    axios
+                        .post("/api/addLike", {
+                            "msg_index": data.index,
+                            "uid": this.login_uid
+                        })
+                        .then(response => {
+                            //console.log("like-server:"+response.data);
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
                 //取消点赞
-                else{
-                    axios 
-                    .post("/api/cancelLike",{
-                        "msg_index":data.index
-                    })
-                    .then(response=>{
-                        console.log("cancelike-server:"+response.data);
-                        
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
-                }        
+                else {
+                    axios
+                        .post("/api/cancelLike", {
+                            "msg_index": data.index
+                        })
+                        .then(response => {
+                            console.log("cancelike-server:" + response.data);
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
             }
         },
 
@@ -377,11 +423,11 @@ export default {
                         //console.log(response.data);
                         this.message = response.data;
                         //获取发帖人的个人信息
-                        if (response.data.uid != null && response.data.uid != ""){
+                        if (response.data.uid != null && response.data.uid != "") {
                             this.getMsgUserInfo(response.data.uid);
                             this.getComments();
                         }
-                            
+
                     }
 
                 })
@@ -396,6 +442,7 @@ export default {
             axios
                 .post("/api/getVisitUserInfo?visitUID=" + uid)
                 .then(response => {
+                    //console.log(response.data);
                     if (response.data != null)
                         this.msg_user = response.data;
                 })
@@ -407,30 +454,29 @@ export default {
         //从导航栏获取登录信息
         getInfoFromNav(user) {
             //console.log("viewMsg--receieveInfo_from_nav...");
-            if (user.UID !== null && user.UID != ""){
+            if (user.UID !== null && user.UID != "") {
                 this.login_uid = user.UID;
-                this.login_name=user.Username;
-            }      
+                this.login_name = user.Username;
+            }
         },
 
         //弹出确认框
         show_deleteModal(index) {
-            this.title = "确认删除该帖子?";
+            this.title = "确认删除该小窗?";
             this.show_modal = true;
             this.delete_index = index;
         },
 
         //确认
-        modalConfirm(){
-            if(this.title=="确认删除该帖子?")
+        modalConfirm() {
+            if (this.title == "确认删除该小窗?")
                 this.deleteMsg();
-            else if(this.title=="删除成功！"||this.title=="正在删除...")
+            else if (this.title == "删除成功！" || this.title == "正在删除...")
                 this.closeModal();
-            else if(this.title=="你还未登陆,请先登陆"){
+            else if (this.title == "你还未登陆,请先登陆") {
                 //alert("login");
-                window.location.href="/#/Login/";
-            }
-            else if(this.title=="输入内容为空,请检查")
+                window.location.href = "/#/Login/";
+            } else if (this.title == "输入内容为空,请检查")
                 this.closeModal();
         },
 
@@ -454,10 +500,10 @@ export default {
         success() {
             this.title = '删除成功！';
         },
-        closeModal(){
-            this.show_modal=false;
-            if(this.title=="删除成功！"||this.title=="正在删除...")
-                window.location.href="/#/Home/";
+        closeModal() {
+            this.show_modal = false;
+            if (this.title == "删除成功！" || this.title == "正在删除...")
+                window.location.href = "/#/Home/";
         }
     }
 
@@ -474,21 +520,37 @@ body {
         background-repeat: no-repeat;
         background-attachment: fixed; */
 }
-.viewMsg_headImg{
+
+.viewMsg-follow_btn1 {
+    width: 50px;
+    height: 26px;
+    font-size: 12px;
+    margin: 6px;
+}
+
+.viewMsg-follow_btn2 {
+    width: 70px;
+    height: 26px;
+    font-size: 12px;
+    margin: 6px;
+}
+
+.viewMsg_headImg {
     width: 30px;
     height: 30px;
     border-radius: 15px;
 }
-.msg_content{
-    margin:10px;
-    font-size:18px;
-    background: rgb(250,250,250);
-    padding:20px;
+
+.msg_content {
+    margin: 10px;
+    font-size: 18px;
+    background: rgb(250, 250, 250);
+    padding: 20px;
     word-wrap: break-word;
     word-break: break-all;
 }
 
-.viewMsg_commit{
+.viewMsg_commit {
     margin-top: 5px;
     background: white;
     width: 100%;
@@ -496,22 +558,23 @@ body {
     padding-bottom: 30px;
 }
 
-.bigIcon_div{
+.bigIcon_div {
     width: 100%;
     display: flex;
     flex-direction: row;
     overflow: hidden;
 }
-.bigIcon_div span{
+
+.bigIcon_div span {
     font-size: 16px;
 }
 
-.time_div{
+.time_div {
     display: flex;
     flex-direction: row;
-    font-size:12px;
-    margin-left:10px;
-    margin-top:5px;
+    font-size: 12px;
+    margin-left: 10px;
+    margin-top: 5px;
     overflow: hidden;
 }
 
@@ -538,9 +601,9 @@ body {
 }
 
 .btn_submit {
-    width:60px;
-    height:30px;
-    font-size:12px;
+    width: 60px;
+    height: 30px;
+    font-size: 12px;
     border: none;
     border-radius: 2px;
     background: rgb(205, 133, 63);
@@ -581,42 +644,49 @@ body {
     padding-bottom: 20px;
 }
 
-#viewMsg-mid-div{
-    width:40%;
-    float:left;
+#viewMsg-mid-div {
+    width: 40%;
+    float: left;
 }
+
 /* 移动端的评论的输入div */
-.viewMsg-mobile-input{
+.viewMsg-mobile-input {
     display: none;
 }
-@media screen and (max-width: 500px){
-    .viewMsg_commit{
-        margin-top: 3px;
+
+@media screen and (max-width: 500px) {
+    .viewMsg_commit {
+        margin-top: 0px;
         background: white;
         width: 100%;
         padding: 10px;
         padding-bottom: 40px;
     }
-    .viewMsg-mobile-input{
+
+    .viewMsg-mobile-input {
+        margin-bottom: 5px;
         background: white;
-        display:flex;
+        display: flex;
         flex-direction: row;
     }
+
     .viewMsg_content {
-        margin-top: -10px;
+        margin-top: -5px;
         width: 100%;
         background: white;
         padding-bottom: 20px;
     }
 
-    #viewMsg-mid-div{
+    #viewMsg-mid-div {
         /* margin: 10px; */
-        width:100%;
+        width: 100%;
     }
-    #viewMsg-left-div{
+
+    #viewMsg-left-div {
         display: none;
     }
-    #viewMsg-right-div{
+
+    #viewMsg-right-div {
         display: none;
     }
 }

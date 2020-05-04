@@ -26,10 +26,10 @@
             </div>
             <div v-if="uid!=login_uid">
                 <div v-if="followed==false">
-                    <button class='btn btn-outline-success btn-sm follow_btn' @click="follow">关注</button>
+                    <button class='btn btn-outline-success btn-sm visit-follow_btn1' @click="follow">关注</button>
                 </div>
                 <div v-else-if="followed==true">
-                    <button class='btn btn-outline-success btn-sm followed_btn' disabled>已关注</button>
+                    <button class='btn btn-outline-success btn-sm visit-follow_btn2' @click="cancelFollow">取消关注</button>
                 </div>
             </div>
             <div style="padding-top:8px;text-align:center;font-size:16px;">
@@ -59,7 +59,7 @@
                         </router-link>
                     </b>
                 </span>
-                <span class="infoText"><b>帖子</b></span>
+                <span class="infoText"><b>小窗</b></span>
                 <span>
                     <b v-if="uid==login_uid">
                         <router-link :to="{path:'/MultiPage/',query:{action:'seeMyMsg'}}" style="text-decoration:none;" class="font_shadow">
@@ -361,8 +361,25 @@ export default {
                     console.log(error);
                 });
         },
+        //取消关注
+        cancelFollow(){
+            axios
+                .post("/api/cancelFollow",{
+                    "targetUID":this.uid
+                })
+                .then(response =>{
+                    console.log("visit--cancelFollow:"+response.data);
+                    if(response.data=="success"){
+                        this.followed=false;
+                    }    
+                    else alert("取消关注失败");
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //关注
-        follow: function () {
+        follow() {
             if (this.login_uid == null || this.login_uid == "") {
                 //alert("你还未登录");
                 this.title = "你还未登陆,请先登陆";
@@ -378,7 +395,7 @@ export default {
                 })
                 .then(response => {
                     if (response.data == "success")
-                        location.reload();
+                        this.followed=true;
                     else {
                         this.title = "关注失败";
                         this.showModal = true;
@@ -432,10 +449,28 @@ export default {
         margin-left: 20px;
     }
 
+    .visit-follow_btn1 {
+        width: 50px;
+        height: 26px;
+        font-size: 12px;
+        margin: 6px;
+    }
+    .visit-follow_btn2 {
+        width: 70px;
+        height: 26px;
+        font-size: 12px;
+        margin: 6px;
+    }
     .follow_btn {
         width: 60px;
         height: 30px;
         font-size: 14px;
+        margin-top: 6px;
+    }
+    .followed_btn {
+        width: 55px;
+        height: 26px;
+        font-size: 11px;
         margin-top: 6px;
     }
     .update_headImg{
@@ -445,16 +480,12 @@ export default {
         font-size: 12px;
         margin-top: 6px;
     }
-    .followed_btn {
-        width: 55px;
-        height: 26px;
-        font-size: 11px;
-        margin-top: 6px;
-    }
+    
     #visit-midContent{
         width:40%;
         float:left;
     }
+
     @media screen and (max-width: 500px){
         #visit-container{
             margin-top:-20px;

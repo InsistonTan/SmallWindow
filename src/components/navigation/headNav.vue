@@ -73,6 +73,8 @@ export default {
         //获取个人信息，检查是否已经登录
         getInfo: function () {
             console.log("headNav-getInfo...");
+            //先从ssesionStorage检查用户信息
+            var storge=window.sessionStorage;
             axios
                 .post("/api/getInfo")
                 .then(response => {

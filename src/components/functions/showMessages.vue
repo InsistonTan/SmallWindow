@@ -184,13 +184,13 @@ export default {
 
         //
         show_deleteModal(index) {
-            this.title = "确认删除该帖子?";
+            this.title = "确认删除该小窗?";
             this.show_modal = true;
             this.delete_index = index;
         },
         //
         confirm(){
-            if(this.title=="确认删除该帖子?")
+            if(this.title=="确认删除该小窗?")
                 this.deleteMsg();
             else if(this.title=="正在删除..."||this.title=="删除成功！")
                 this.show_modal=false;

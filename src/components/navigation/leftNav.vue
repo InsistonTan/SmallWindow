@@ -59,7 +59,7 @@
             </div>
             <div>
                 <li class="nav-item">
-                    <a href="#">暂无</a>
+                    <router-link :to="{path:'/MultiPage/',query:{action:'seeNewMsg'}}">最新</router-link>
                 </li>
             </div>
             <div>

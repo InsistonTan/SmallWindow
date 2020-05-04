@@ -13,10 +13,11 @@
             <div id="multi-container">
                 <!-- 标题 -->
                 <div class="shadow_div" style="background:white;padding:5px;text-align:center;font-size:16px;">
-                    <span v-if="action=='seeTopMsg'">热门帖子Top10</span>
-                   
-                    <span v-else-if="action=='seeMyMsg'">我的帖子({{login_user.messageNum}})</span>
-                    <span v-else-if="action=='seeVisitMsg'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的帖子({{visit_user.messageNum}})</span>
+                    <span v-if="action=='seeTopMsg'">热门小窗Top10</span>
+                    <span v-else-if="action=='seeNewMsg'">最新小窗</span>
+
+                    <span v-else-if="action=='seeMyMsg'">我的小窗({{login_user.messageNum}})</span>
+                    <span v-else-if="action=='seeVisitMsg'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的小窗({{visit_user.messageNum}})</span>
                     
                     <span v-else-if="action=='seeMyFollow'">我的关注({{login_user.followNum}})</span>
                     <span v-else-if="action=='seeVisitFollow'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的关注({{visit_user.followNum}})</span>
@@ -24,14 +25,15 @@
                     <span v-else-if="action=='seeMyFan'">我的粉丝({{login_user.fanNum}})</span>
                     <span v-else-if="action=='seeVisitFan'"><span style="color:rgb(185,113,43);">{{visit_user.Username}}</span> 的粉丝({{visit_user.fanNum}})</span>      
 
-                    <span v-else-if="action=='seeMyLikeMsg'">我的点赞({{message.length}})</span>
-                    <span v-else-if="action=='seeMyCollectMsg'">我的收藏({{message.length}})</span>
-                    <span v-else-if="action=='seeMyCommentMsg'">我评论过的帖子({{message.length}})</span>
+                    <span v-else-if="action=='seeMyLikeMsg'">我的点赞({{messages.length}})</span>
+                    <span v-else-if="action=='seeMyCollectMsg'">我的收藏({{messages.length}})</span>
+                    <span v-else-if="action=='seeMyCommentMsg'">我评论过的小窗({{messages.length}})</span>
                 </div>
                 <!-- 内容展示 -->
                 <div style="background:rgb(245,245,245);padding:10px;margin-top:-10px;">
+                    <div v-if="messages.length==0&&users==null" style="text-align:center;font-size:20px;"><b>{{change_text}}</b></div>
                     <ShowUsers :users="users" :uid="login_uid" @cancelFollow="cancelFollow" v-if="action=='seeMyFollow'||action=='seeMyFan'||action=='seeVisitFan'||action=='seeVisitFollow'"></ShowUsers>
-                    <ShowMessages :messages="message" :uid="login_uid" v-else></ShowMessages>
+                    <ShowMessages :messages="messages" :uid="login_uid" v-else></ShowMessages>
                 </div>
             </div>
         </div>
@@ -74,11 +76,12 @@ export default {
                 'fanNum': '0',
                 'messageNum': '0'
             },
-            message: [],
+            messages: [],
             users:null,
             login_uid:null,
             showModal:false,
-            title:null
+            title:null,
+            change_text:""
         }
     },
     created(){
@@ -103,8 +106,12 @@ export default {
                 this.login_uid=user.UID;
                 this.login_user=user;
             }
+            this.load_animation();
+            //return;
             if(this.action=="seeTopMsg")
                 this.getTopMsg();
+            else if(this.action=="seeNewMsg")
+                this.getNewMsg();
             //判断是否是浏览他人的
             else if(this.visit_uid!=null&&this.visit_uid!=""){
                 this.getVisitorInfo();
@@ -138,14 +145,57 @@ export default {
             }
                
         },
-
+        //...的动画效果
+        load_animation(){
+            setTimeout(this.change_pointer,300);
+        },
+        //动态的...
+        change_pointer(){
+            if(this.change_text==""){
+                this.change_text=".";
+                if(this.messages.length==0&&this.users==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="."){
+                this.change_text="..";
+                if(this.messages.length==0&&this.users==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text==".."){
+                this.change_text="...";
+                if(this.messages.length==0&&this.users==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }
+            else if(this.change_text=="..."){
+                this.change_text="";
+                if(this.messages.length==0&&this.users==null){
+                    setTimeout(this.change_pointer,300);
+                }
+            }   
+        },
+        //获取最新的10个帖子
+        getNewMsg(){
+            axios
+                .post("/api/getNewMessage")
+                .then(response=>{
+                    //console.log(response);
+                    if(response.data!=null)
+                        this.messages=response.data;
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+        },
         //获取登陆者评论过的帖子
         getMyCommentMsg(){
             axios   
                 .post("/api/getMyCommentMsg")
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){
@@ -159,7 +209,7 @@ export default {
                 .post("/api/getMyCollectMsg")
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){
@@ -173,7 +223,7 @@ export default {
                 .post("/api/getMyLikeMsg")
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){
@@ -229,7 +279,7 @@ export default {
                 .post("/api/getVisitMessage?visitUID="+this.visit_uid)
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){
@@ -268,7 +318,7 @@ export default {
                 .post("/api/getMyMessage")
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){
@@ -281,7 +331,7 @@ export default {
                 .post("/api/getMsgTop10")
                 .then(response =>{
                     if(response.data!=null){
-                        this.message=response.data;
+                        this.messages=response.data;
                     }
                 })
                 .catch(function(error){

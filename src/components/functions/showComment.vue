@@ -22,7 +22,8 @@
             </div>
             <div>
                 <span class="sc_reply" @click="reply(data.username)">回复</span>
-                <span class="sc_reply" @click="deleteComment(data);data.id=null;" v-if="login_uid==data.uid||msg_uid==login_uid">删除</span>
+                <span class="sc_reply" @click="deleteComment(data);data.id=null;" 
+                        v-if="login_uid==data.uid||msg_uid==login_uid">删除</span>
             </div>
         </div>
     </div>
@@ -42,7 +43,7 @@ export default {
             this.$emit("reply",name);
         },
         deleteComment(comment){
-            if(comment.id!=null||comment.id!=""){
+            if(comment.id!=null&&comment.id!=""){
                 axios 
                     .post("/api/deleteComment",{
                         "id":comment.id,

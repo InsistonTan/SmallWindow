@@ -70,7 +70,7 @@
                         </router-link>
                     </b>
                 </span>
-                <span class="infoText">帖子</span>
+                <span class="infoText">小窗</span>
                 <span>
                     <!-- <b><a href="#" style="text-decoration:none;" class="font_shadow">{{message_num}}</a></b> -->
                     <b>
