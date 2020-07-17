@@ -5,7 +5,7 @@
     </div>
 
     <div id="login-mid-div" class="index_shadow_div">
-        <h6 style="text-align:center;">账号登陆</h6>
+        <h5 style="text-align:center;">账号登陆</h5>
         <!-- 用户名和密码的输入框 -->
         <input type="text" v-model="input_username" class="form-control username " placeholder="用户名/UID">
         <input type="password" v-model="input_password" class="form-control password " placeholder="密码">
@@ -139,7 +139,7 @@ body {
 
 #login-mid-div {
     border-radius: 4px;
-    padding: 10px;
+    padding: 20px;
     width: 20%;
     position: fixed;
     top: 40%;
@@ -159,7 +159,7 @@ body {
 
 @media screen and (max-width: 500px) {
     .login-title-div {
-        margin-top: -40px;
+        margin-top: -20px;
         color:rgb(205,133,63);
         text-align: center;
         width: 100%;
@@ -170,7 +170,7 @@ body {
 
     #login-mid-div {
         margin: 10px;
-        padding: 10px;
+        padding: 20px;
         width: 90%;
         position: fixed;
         top: 40%;

@@ -1,17 +1,19 @@
 <template>
 <div :key="this.$route.fullPath" >
+    <div v-if="msg_user.UID!=null">
     <!-- 顶部导航栏 -->
     <div>
         <HeadNav @getInfo="getInfoFromNav($event)"></HeadNav>
     </div>
+
     <!-- 左边发帖人信息div -->
     <div id="viewMsg-left-div" style="width:30%;float:left;">
         <div class="msgUserInfo shadow_div">
             <!-- 头像 -->
             <div style="padding-top: 20px;">
                 <router-link :to="{path:'/Visit/',query:{uid:message.uid}}" style="text-decoration:none;color:rgb(185,113,43);">
-                    <img v-if="msg_user.headImg==null" src="../../assets/bigUser.png" alt="头像">
-                    <img v-else style="width:60px;height:60px;border-radius:30px;" :src="msg_user.headImg" alt="头像">
+                    <img v-if="msg_user.headImg!=null" style="width:60px;height:60px;border-radius:30px;" :src="msg_user.headImg" alt="头像">
+                    <img v-else src="../../assets/bigUser.png" alt="头像">
                 </router-link>
             </div>
             <!-- 用户名 -->
@@ -104,8 +106,11 @@
                 </div>
             </div>
             <!-- 帖子内容div -->
-            <div class="rounded msg_content">
-                {{message.content}}
+            <div v-html="message.content" class="rounded msg_content"></div>
+            <div style="background:rgb(250,250,250);">
+                <ShowPicture u_src="viewMsg" :urls="dueMsgImgUrl(message.img)"></ShowPicture>
+                <!-- 视频 -->
+                <video class="viewMsgVideo" v-if="message.video!=null&&message.video!=''" :src="message.video" controls></video>
             </div>
             <div class="bigIcon_div">
                 <div class="like" style="margin-left:20px;" @click="click_like(message);if(message.liked!=1){message.liked=1;message.like++;}else{message.liked=0;message.like--;}">
@@ -142,10 +147,12 @@
         </div>
     </div>
     <!-- 移动端的回复框 -->
-    <div class="fixed-bottom viewMsg-mobile-input" style="padding:5px;">
+    <div class="viewMsg-mobile-input" style="padding:5px;">
         <input id="viewMsg-mobile-input" type="text" class="form-control rounded" style="width:86%;" placeholder="回复点啥..." v-model="input_comment">
         <button type="button" class="btn btn-outline-success btn-sm" @click="addComment" style="margin-left:5px;">回复</button>
     </div>
+    </div>
+
     <!-- 消息框 -->
     <MyModal v-bind:show="show_modal" v-bind:title="title" @close="closeModal" @confirm="modalConfirm">
     </MyModal>
@@ -155,15 +162,19 @@
 <script>
 import MyModal from "@/components/functions/myModal";
 import ShowComment from "@/components/functions/showComment";
+import ShowPicture from "@/components/functions/showPicture";
 import HeadNav from "@/components/navigation/headNav";
 import axios from "axios";
+import NProgress from "nprogress";
+import 'nprogress/nprogress.css';
 
 export default {
     name: 'viewMsg',
     components: {
         HeadNav,
         MyModal,
-        ShowComment
+        ShowComment,
+        ShowPicture
     },
     data() {
         return {
@@ -174,26 +185,28 @@ export default {
             message: {
                 'index': null,
                 'uid': null,
-                'user': 'Username',
-                'content': 'content',
+                'user': null,
+                'content': null,
                 'time': null,
                 'view': 0,
                 'like': 0,
                 'collect': 0,
                 'liked': null,
                 'collected': null,
-                'comment': 0
+                'comment': 0,
+                'img':null,
+                'video':null
             },
             msg_user: {
-                'UID': '',
-                'Username': 'Username',
-                'sex': '男',
-                'age': '0',
-                'introduce': 'introduce',
+                'UID': null,
+                'Username': null,
+                'sex': null,
+                'age': null,
+                'introduce': null,
                 'isFollowed': 0,
-                'followNum': '0',
-                'fanNum': '0',
-                'messageNum': '0',
+                'followNum': null,
+                'fanNum': null,
+                'messageNum': null,
                 'headImg': null
             },
             input_comment: null,
@@ -202,7 +215,9 @@ export default {
         }
     },
     created() {
+        NProgress.start();
         this.getMessageByIndex();
+        NProgress.done();
     },
     mounted() {
         var storage = window.sessionStorage;
@@ -229,8 +244,22 @@ export default {
         }
         next();
     },
-
     methods: {
+        //处理帖子的图片地址（将其转换成json数组）
+        dueMsgImgUrl(urls){
+            console.log(urls);
+            
+            var strs=new Array();
+            var jsonArray=[];
+            if(urls!=null&&urls!=""){
+                strs=urls.split(";");
+                for(var i=0;i<strs.length;i++){
+                    var obj={"url":strs[i]};
+                    jsonArray.push(obj);
+                }
+            }
+            return jsonArray;
+        },
         //关注
         follow: function () {
             if (this.login_uid == null || this.login_uid == "") {
@@ -314,10 +343,15 @@ export default {
                 this.title = "输入内容为空,请检查";
                 this.show_modal = true;
             } else {
+                //处理回车和空格
+                var text_enter=this.input_comment.replace(/\n/g,'<br>');
+                var text_space=text_enter.replace(/\s/g,'&nbsp;');
+                var format_data=text_space;
+                //
                 axios
                     .post("/api/addComment", {
                         "msg_index": this.message.index,
-                        "content": this.input_comment
+                        "content": format_data
                     })
                     .then(response => {
                         //console.log("viewMsg-addComment:"+response.data);
@@ -420,12 +454,12 @@ export default {
                 .post("/api/getOneMessage?index=" + this.msg_index)
                 .then(response => {
                     if (response.data != null) {
-                        //console.log(response.data);
+                        console.log(response.data);
                         this.message = response.data;
                         //获取发帖人的个人信息
                         if (response.data.uid != null && response.data.uid != "") {
-                            this.getMsgUserInfo(response.data.uid);
-                            this.getComments();
+                             this.getMsgUserInfo(response.data.uid);
+                             this.getComments();
                         }
 
                     }
@@ -520,7 +554,10 @@ body {
         background-repeat: no-repeat;
         background-attachment: fixed; */
 }
-
+.viewMsgVideo{
+    margin-left: 10px;
+    width: 96%;
+}
 .viewMsg-follow_btn1 {
     width: 50px;
     height: 26px;
@@ -652,19 +689,26 @@ body {
 /* 移动端的评论的输入div */
 .viewMsg-mobile-input {
     display: none;
+    position: fixed;
+    bottom: 10px;
 }
 
 @media screen and (max-width: 500px) {
+    .viewMsgVideo{
+        margin-left: 10px;
+        width: 95%;
+    }
     .viewMsg_commit {
         margin-top: 0px;
         background: white;
         width: 100%;
         padding: 10px;
-        padding-bottom: 40px;
+        padding-bottom: 100px;
     }
 
     .viewMsg-mobile-input {
-        margin-bottom: 5px;
+        width: 100vw;
+        /* margin-bottom: 5px; */
         background: white;
         display: flex;
         flex-direction: row;
@@ -678,6 +722,7 @@ body {
     }
 
     #viewMsg-mid-div {
+        margin-top:-7px;
         /* margin: 10px; */
         width: 100%;
     }

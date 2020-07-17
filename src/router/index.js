@@ -8,6 +8,9 @@ import Search from '@/components/search/search'
 import Visit from '@/components/visit/visit';
 import ViewMsg from '@/components/viewMsg/viewMsg';
 import MultiPage from '@/components/functions/multiPage'
+import LetterCenter from '@/components/letter/letterCenter'
+import MultiNotice from '@/components/letter/multiNotice'
+import LetterChat from '@/components/letter/letterChat'
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +72,31 @@ export default new Router({
       meta:{
         keepAlive: true
       }
+    },
+    {
+      path: '/LetterCenter/',
+      name: 'LetterCenter',
+      component: LetterCenter,
+      meta:{
+        keepAlive: false
+      }
+    },
+    {
+      path: '/MultiNotice/',
+      name: 'MultiNotice',
+      component: MultiNotice,
+      meta:{
+        keepAlive: false
+      }
+    },
+    {
+      path: '/LetterChat/',
+      name: 'LetterChat',
+      component: LetterChat,
+      meta:{
+        keepAlive: false
+      }
     }
+    
   ]
 })

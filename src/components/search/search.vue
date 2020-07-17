@@ -44,6 +44,8 @@ import ShowMessages from "@/components/functions/showMessages";
 import ShowUsers from "@/components/functions/showUsers";
 import HeadNav from "@/components/navigation/headNav";
 import axios from "axios";
+import NProgress from "nprogress";
+import 'nprogress/nprogress.css';
 export default {
     name: 'search',
     components: {
@@ -87,6 +89,7 @@ export default {
         },
         //搜索用户
         searchUser: function () {
+            NProgress.start();
             axios
                 .post("/api/searchUser?keyword=" + this.key)
                 .then(response => {
@@ -97,9 +100,11 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
+            NProgress.done();
         },
         //搜索帖子
         searchMessage: function () {
+            NProgress.start();
             axios
                 .post("/api/searchMessage?keyword=" + this.key)
                 .then(response => {
@@ -110,6 +115,7 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
+            NProgress.done();
         }
     }
 }

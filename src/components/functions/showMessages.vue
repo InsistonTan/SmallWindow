@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class='rounded message_div shadow_div' v-for="data in messages" v-bind:key="data.index" >
-        <div >
+        <div>
             <div id='Username' style='font-size:16px;margin-left:10px;padding-top:6px;'>
                 <router-link :to="{path:'/Visit/',query:{uid:data.uid}}" class='font_shadow'>
                     <img v-if="data.headImg==null" src='../../assets/user2.png' alt='account' style='width: 20px;height: 20px;'>
@@ -16,10 +16,14 @@
                     {{data.time}}
                 </div>
                 <div id='content' style='margin:10px;font-size:16px;word-wrap: break-word;word-break: break-all;'>
-                    {{data.content.substr(0,[200])}}
-                    <span v-if="data.content.length>200">...</span>
+                    {{format_content(data.content).substr(0,[200])}}
+                    <span v-if="format_content(data.content).length>200">...</span>
+                    <!--显示图片 -->
+                    <ShowPicture u_src="showMsg" :urls="dueMsgImgUrl(data.img)"></ShowPicture>
                 </div>
-            </div>      
+            </div>
+            <!-- 视频 -->
+            <video class="showMsgVideo" v-if="data.video!=null&&data.video!=''" :src="data.video" controls></video>      
         </div>
         <!-- <hr style="height:0px;margin-bottom:6px;margin-top:10px;"> -->
         <div id="footer" class="foot">
@@ -55,12 +59,14 @@
 
 <script>
 import MyModal from "@/components/functions/myModal";
+import ShowPicture from "@/components/functions/showPicture";
 import axios from 'axios';
 export default {
     name: 'showMessages',
     props: ['uid', 'messages'],
     components: {
-        MyModal
+        MyModal,
+        ShowPicture
     },
     data() {
         return {
@@ -73,6 +79,27 @@ export default {
 
     },
     methods: {
+        //处理帖子的图片地址（将其转换成json数组）
+        dueMsgImgUrl(urls){
+            var strs=new Array();
+            var jsonArray=[];
+            if(urls!=null&&urls!=""){
+                strs=urls.split(";");
+                for(var i=0;i<strs.length;i++){
+                    var obj={"url":strs[i]};
+                    jsonArray.push(obj);
+                }
+            }
+            return jsonArray;
+        },
+        //处理帖子的回车和空格
+        format_content(content){
+            //return content;
+            //console.log("format-content...");
+            var text_enter=content.replace(/<br>/g,'       ');
+            var text_space=text_enter.replace(/&nbsp;/g,' ');
+            return text_space;
+        },
         //点击收藏按钮
         click_collect(data){
             //alert("click_collect");
@@ -227,6 +254,10 @@ export default {
 
 <style>
 @import url("../../lib/css/shadow.css");
+.showMsgVideo{
+    margin: 10px;
+    width: 95%;
+}
 .showMsg_headImg{
     width: 26px;
     height: 26px;

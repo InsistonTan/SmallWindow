@@ -149,7 +149,7 @@ export default {
 	height: 40px;
 	/* border: 1px solid ;  */
 	background:url('../assets/account.png') 8px 10px no-repeat;
-	padding-left: 32px; 
+	padding-left: 16px; 
 }
 .r_password{
 	margin-top:10px;
@@ -159,7 +159,7 @@ export default {
 	/* border-radius:4px; */
 	/* border: 1px solid ;  */
 	background:url('../assets/password.png') 8px 10px no-repeat;
-	padding-left: 32px; 
+	padding-left: 16px; 
 }
 
 body {
@@ -171,7 +171,7 @@ body {
 
 .register_mid_div {
     position: fixed;
-    top: 10%;
+    top: 20%;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -184,12 +184,12 @@ body {
 }
 .register-title{
         text-align: center;
-        margin-top:-50px;
+        margin-top:-20px;
         color:rgb(205,133,63);
 }
 @media screen and (max-width: 500px){
     .register-title{
-        margin-top: -50px;
+        margin-top: -20px;
         color:rgb(205,133,63);
         text-align: center;
         width: 100%;
@@ -204,7 +204,7 @@ body {
     .register_mid_div {
         width: 80%;
         position: fixed;
-        top:10%;
+        top:18%;
         left: 0;
         right: 0;
         margin: 0 auto;

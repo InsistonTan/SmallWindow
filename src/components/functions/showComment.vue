@@ -17,8 +17,8 @@
             <div id="time" style="font-size:10px;">
                 {{data.time}}
             </div>
-            <div class="com_content">
-                {{data.content}}
+            <div v-html="data.content" class="com_content">
+        
             </div>
             <div>
                 <span class="sc_reply" @click="reply(data.username)">回复</span>

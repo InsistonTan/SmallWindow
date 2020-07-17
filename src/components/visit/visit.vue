@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <HeadNav @getInfo="getInfo_nav($event)"></HeadNav>
     <!-- 下方主体-->
-    <div id="visit-container">
+    <div v-if="username!=null" id="visit-container">
         <div id="topDiv" style="width:100%;text-align:center;">
             <!-- 头像 -->
             <div style="padding-top: 20px;">
@@ -26,9 +26,11 @@
             </div>
             <div v-if="uid!=login_uid">
                 <div v-if="followed==false">
+                    <button class='btn btn-outline-success btn-sm visit-follow_btn1' @click="go('/#/LetterChat/?uid='+uid)">私信</button>
                     <button class='btn btn-outline-success btn-sm visit-follow_btn1' @click="follow">关注</button>
                 </div>
                 <div v-else-if="followed==true">
+                    <button class='btn btn-outline-success btn-sm visit-follow_btn1' @click="go('/#/LetterChat/?uid='+uid)">私信</button>
                     <button class='btn btn-outline-success btn-sm visit-follow_btn2' @click="cancelFollow">取消关注</button>
                 </div>
             </div>
@@ -144,7 +146,7 @@ export default {
         return {
             uid: this.$route.query.uid,
             login_uid: null,
-            username: 'Username',
+            username: null,
             headImg:null,
             follow_num: 0,
             fan_num: 0,
@@ -192,6 +194,10 @@ export default {
         next();
     },
     methods: {
+        //跳转
+        go(url){
+            location.href=url;
+        },
         //...的动画效果
         load_animation(){
             setTimeout(this.change_pointer,300);
@@ -230,16 +236,40 @@ export default {
         //上传头像文件
         uploadPhoto(){
             this.update_headImg_statu="上传头像中...";
-            //
+            //获取文件
             var select_file=document.getElementById("photoFile").files[0];
-            console.log("文件名:"+select_file.name+"大小:"+select_file.size);
+            if(select_file==null||select_file=="undefined")
+                return;
+            //获取文件信息
+            var file_name=select_file.name;
+            var file_size=select_file.size;
+            console.log("文件名:"+file_name+"大小:"+file_size);
+            if(file_size>=1024*1024*10){
+                this.update_headImg_statu="上传失败！文件大小不能超过10M";
+                return;
+            }
+            //截取文件后缀
+            var strs=new Array();
+            strs=file_name.split(".");
+            var length=strs.length;
+            var file_type=strs[length-1];
+            if(file_type!="jpg"&&file_type!="png"&&file_type!="bmp"&&file_type!="jpeg"&&file_type!="gif"&&file_type!="JPG"&&file_type!="PNG"&&file_type!="BMP"&&file_type!="GIF"){
+                this.update_headImg_statu="上传失败，文件"+file_name+"类型不支持";
+                return;
+            }   
+            //上传文件
             var formData=new FormData();
             formData.append("headImg",select_file);
             formData.append("type","HeadImg");
             //
             axios 
                 .post("/api/uploadHeadImg",formData,{
-                    headers:{'Content-Type':'multipart/form-data'}
+                    headers:{'Content-Type':'multipart/form-data'},
+                    //上传进度
+                    onUploadProgress: progressEvent => {
+                        var complete = (progressEvent.loaded / progressEvent.total * 100 | 0) + '%';
+                        this.update_headImg_statu = "正在上传："+complete;
+                    }
                 })
                 .then(response =>{
                     console.log(response.data);

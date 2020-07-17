@@ -49,6 +49,8 @@ import ShowMessages from "@/components/functions/showMessages";
 import ShowUsers from "@/components/functions/showUsers";
 import MyModal from "@/components/functions/myModal";
 import axios from "axios";
+import NProgress from "nprogress";
+import 'nprogress/nprogress.css';
 export default {
     name: 'multiPage',
     components:{
@@ -108,6 +110,7 @@ export default {
             }
             this.load_animation();
             //return;
+            NProgress.start();
             if(this.action=="seeTopMsg")
                 this.getTopMsg();
             else if(this.action=="seeNewMsg")
@@ -143,7 +146,7 @@ export default {
                     this.showModal=true;
                 }
             }
-               
+             NProgress.done();  
         },
         //...的动画效果
         load_animation(){

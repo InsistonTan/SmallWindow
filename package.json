@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "git": "^0.1.5",
+    "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
