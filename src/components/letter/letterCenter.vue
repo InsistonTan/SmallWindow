@@ -2,7 +2,7 @@
 <div>
     <!-- 顶部导航栏 -->
     <div style="width:100%;">
-        <HeadNav @getInfo="getInfo($event)"></HeadNav>
+        <HeadNav setInterval="false" @getInterval="headInterval=$event" father="letterCenter" @getInfo="getInfo($event)"></HeadNav>
     </div>
     <div class="LC-content">
         <div id="LC-title">
@@ -70,10 +70,20 @@ export default {
             unread_like:0,
             unread_call:0,
             unread_letter:[],
+            headInterval:null,
         }
     },
     created(){
 
+    },
+    beforeRouteLeave (to, from, next) {
+        if(this.headInterval!=null){
+            console.log("letterCenter-stop headNav getUnread Interval...");
+            clearInterval(this.headInterval);
+        }
+        // ...
+        //this.stopHeadInterval=true;
+        next();
     },
     methods:{
         //跳转

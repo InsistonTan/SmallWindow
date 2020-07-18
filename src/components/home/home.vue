@@ -2,7 +2,7 @@
 <div>
     <!-- 顶部导航栏 -->
     <div style="width:100%;">
-        <HeadNav @getInfo="getInfo($event)"></HeadNav>
+        <HeadNav setInterval="true" @getInterval="headInterval=$event" father="home" @getInfo="getInfo($event)"></HeadNav>
     </div>
 
     <div v-if="uid!=null">
@@ -146,6 +146,7 @@ export default {
             upload_video:null,
             uploadFile_statu:null,
             //getMsg_ing:false
+            headInterval:null,
         }
     },
     created() {
@@ -157,6 +158,10 @@ export default {
         this.getFollowMessages();
     },
     beforeRouteLeave (to, from, next) {
+        if(this.headInterval!=null){
+            console.log("home-stop headNav getUnread Interval...");
+            clearInterval(this.headInterval);
+        }
         if(to.name=="index"){
             this.$destroy();
             next();

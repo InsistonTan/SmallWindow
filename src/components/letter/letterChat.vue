@@ -2,7 +2,7 @@
 <div>
     <!-- 顶部导航栏 -->
     <div style="width:100%;">
-        <HeadNav @getInfo="getInfo($event)"></HeadNav>
+        <HeadNav setInterval="false" @getInterval="headInterval=$event" father="letterChat" @getInfo="getInfo($event)"></HeadNav>
     </div>
     <div v-show="show==true" id="lc-content">
         <div id="lc-c-title">
@@ -72,9 +72,27 @@ export default {
             data:[],
             show:false,
             reply_input:null,
+            headInterval:null,
+            letterInterval:null,//获取聊天记录定时器
+            startLetterInterval:false,//定时器开关
         }
     },
     created(){
+    },
+    beforeRouteLeave (to, from, next) {
+        //清除导航栏获取未读通知的定时器
+        if(this.headInterval!=null){
+            console.log("letterChat-stop headNav getUnread Interval...");
+            clearInterval(this.headInterval);
+        }
+        //清除获取聊天消息的定时器
+        if(this.letterInterval!=null){
+            console.log("letterChat-stop letter Interval...");
+            clearInterval(this.letterInterval);
+        }
+        // ...
+        //this.stopHeadInterval=true;
+        next();
     },
     watch:{
         data:function(){
@@ -82,6 +100,12 @@ export default {
                 this.$nextTick(function(){
                     this.moveScroll();
                 });
+            }
+        },
+        //开始轮询获取消息
+        startLetterInterval:function(){
+            if(this.startLetterInterval==true){
+                this.letterInterval=setInterval(this.getFriendLetter,2000);
             }
         }
     },
@@ -130,6 +154,8 @@ export default {
                     this.getFriUserInfo();
                     this.getFriendLetter();
                     this.show=true;
+                    if(this.data.length==0)
+                        NProgress.done();
                     //将滑动条滑到底部
                     //setTimeout(this.moveScroll,0);
                 }   
@@ -155,8 +181,15 @@ export default {
                     var res=response.data;
                     //console.log(res);
                     if(res.statu=="success"){
-                        if(res.data.length>0)
-                            this.data=res.data;
+                        if(res.data.length>0){
+                            if(this.data.length<res.data.length){
+                                for(var i=this.data.length;i<res.data.length;i++){
+                                    this.data.push(res.data[i]);
+                                }
+                            }
+                            //this.data=res.data;
+                        }
+                            
                     }
                     else{
                         console.log(res.msg);
@@ -165,6 +198,8 @@ export default {
                 .catch(function(error){
                     console.log(error);
                 })
+            //开启获取消息的定时器
+            this.startLetterInterval=true;
         },
         //获取对方的个人信息
         getFriUserInfo() {

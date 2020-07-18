@@ -15,73 +15,8 @@
                     <img class="headNav_headImg" :src="headImg" alt="头像">
                 </span>
             </div>
-            <!-- 用户菜单内容 -->
-            <transition name="userDrop">
-                <div class="drop-content" v-if="showUserDrop==true">
-                    <!-- 没登陆时的菜单 -->
-                    <div v-if="uid==null||uid==''" style="text-align:center;">
-                        <div style="padding:5px;">
-                            <img style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" src="../../assets/bigUser.png" alt="头像">
-                        </div>
-                        <hr style="margin-top:5px;margin-bottom:5px;">
-                        <div class="drop-item">
-                            <router-link to="/Login/">登陆-注册</router-link>
-                        </div>
-                    </div>
-                    <!-- 登陆后的菜单 -->
-                    <div v-else>
-                        <!-- 用户头像及用户名 -->
-                        <div @click="go('/#/Visit/?uid='+uid)" style="background:rgb(245,245,245);padding:15px 10px 20px 20px;">
-                            <!-- 头像 -->
-                            <img v-if="headImg==null||headImg=='null'" style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" src="../../assets/bigUser.png" alt="头像">
-                            <img v-else style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" :src="headImg" alt="头像">
-                            <div style="margin-top:5px;">
-                                <b style="color:rgb(205,133,63);font-size:16px;padding-left:6px;">{{username}}</b>
-                                <span class="text-muted" style="margin-left:5px;font-size:13px;">{{login_user.registerTime}}</span>
-                            </div>
-                        </div>
-                        <div class="text-muted" style="width:100%;background:white;font-size:14px;">
-                            <div @click="go('/#/MultiPage/?action=seeMyMsg')" class="block-item">
-                                <div>{{login_user.messageNum}}</div>
-                                <div>小窗</div>
-                            </div>
-                            <div @click="go('/#/MultiPage/?action=seeMyFollow')" class="block-item">
-                                <div>{{login_user.followNum}}</div>
-                                <div>关注</div>
-                            </div>
-                            <div @click="go('/#/MultiPage/?action=seeMyFan')" class="block-item">
-                                <div>{{login_user.fanNum}}</div>
-                                <div>粉丝</div>
-                            </div>
-                        </div>
-                        <div class="drop-item" @click="showUserDrop=false;;goHome();">
-                            <img src="../../assets/menu-home.svg" alt="home">
-                            首页
-                        </div>
-                        <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyCollectMsg')">
-                            <img src="../../assets/menu-collect.svg" alt="home">
-                            我的收藏
-                        </div>
-                        <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyLikeMsg')">
-                            <img src="../../assets/menu-like.svg" alt="home">
-                            我的点赞
-                        </div>
-                        <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyCommentMsg')">
-                            <img src="../../assets/menu-comment.svg" alt="home">
-                            我的评论
-                        </div>
-                        <div class="drop-item" @click="safe_exit()">
-                            <img src="../../assets/menu-exit.svg" alt="home">
-                            退出
-                        </div>
-                    </div>
-                </div>
-            </transition>
         </div>
-        <transition name="over">
-            <div class="drop-over" v-if="showUserDrop==true" @click="closeDrop"></div>
-        </transition>
-
+        
         <!-- 搜索框 -->
         <div class="div-float-left">
             <input type="text" class="form-control search_input" placeholder="搜索..." v-model="input_search" @keydown.enter="search">
@@ -130,6 +65,71 @@
         </div>
         <!-- </ul> -->
     </nav>
+    <!-- 用户菜单内容 -->
+    <transition name="userDrop">
+        <div class="drop-content" v-if="showUserDrop==true">
+            <!-- 没登陆时的菜单 -->
+            <div v-if="uid==null||uid==''" style="text-align:center;">
+                <div style="padding:5px;">
+                    <img style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" src="../../assets/bigUser.png" alt="头像">
+                </div>
+                <hr style="margin-top:5px;margin-bottom:5px;">
+                <div class="drop-item">
+                    <router-link to="/Login/">登陆-注册</router-link>
+                </div>
+            </div>
+            <!-- 登陆后的菜单 -->
+            <div v-else>
+                <!-- 用户头像及用户名 -->
+                <div @click="go('/#/Visit/?uid='+uid)" style="background:rgb(245,245,245);padding:15px 10px 20px 20px;">
+                    <!-- 头像 -->
+                    <img v-if="headImg==null||headImg=='null'" style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" src="../../assets/bigUser.png" alt="头像">
+                    <img v-else style="width:60px;height:60px;border-radius:30px;border:white solid 4px;" :src="headImg" alt="头像">
+                    <div style="margin-top:5px;">
+                        <b style="color:rgb(205,133,63);font-size:16px;padding-left:6px;">{{username}}</b>
+                        <span class="text-muted" style="margin-left:5px;font-size:13px;">{{login_user.registerTime}}</span>
+                    </div>
+                </div>
+                <div class="text-muted" style="width:100%;background:white;font-size:14px;">
+                    <div @click="go('/#/MultiPage/?action=seeMyMsg')" class="block-item">
+                        <div>{{login_user.messageNum}}</div>
+                        <div>小窗</div>
+                    </div>
+                    <div @click="go('/#/MultiPage/?action=seeMyFollow')" class="block-item">
+                        <div>{{login_user.followNum}}</div>
+                        <div>关注</div>
+                    </div>
+                    <div @click="go('/#/MultiPage/?action=seeMyFan')" class="block-item">
+                        <div>{{login_user.fanNum}}</div>
+                        <div>粉丝</div>
+                    </div>
+                </div>
+                <div class="drop-item" @click="showUserDrop=false;;goHome();">
+                    <img src="../../assets/menu-home.svg" alt="home">
+                    首页
+                </div>
+                <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyCollectMsg')">
+                    <img src="../../assets/menu-collect.svg" alt="home">
+                    我的收藏
+                </div>
+                <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyLikeMsg')">
+                    <img src="../../assets/menu-like.svg" alt="home">
+                    我的点赞
+                </div>
+                <div class="drop-item" @click="go('/#/MultiPage/?action=seeMyCommentMsg')">
+                    <img src="../../assets/menu-comment.svg" alt="home">
+                    我的评论
+                </div>
+                <div class="drop-item" @click="safe_exit()">
+                    <img src="../../assets/menu-exit.svg" alt="home">
+                    退出
+                </div>
+            </div>
+        </div>
+    </transition>
+    <transition name="over">
+        <div class="drop-over" v-if="showUserDrop==true" @click="closeDrop"></div>
+    </transition>
 </div>
 </template>
 
@@ -142,13 +142,15 @@ import 'nprogress/nprogress.css';
 var storge = window.sessionStorage;
 export default {
     name: 'headNav',
-    props: ['search_key'],
+    props: ['search_key','father','setInterval'],
     //inject:['reload'],
     data() {
         return {
             uid: storge.getItem("uid"),
             username: storge.getItem("username"),
             headImg: storge.getItem("headImg"),
+            checkServerLogin:false,
+            //interval:null,
             login_user: {
                 "followNum": null,
                 "fanNum": null,
@@ -169,11 +171,19 @@ export default {
         //alert(this.uid);
         this.input_search = this.search_key;
     },
+    watch:{
+        checkServerLogin:function(){
+            if(this.setInterval=="true"&&this.checkServerLogin==true){
+                var interval=setInterval(this.getUnreadNum,10000);
+                this.$emit("getInterval",interval);
+            }
+        }
+    },
     methods: {
         //访问某个页面
-        go(url){
-            this.showUserDrop=false;
-            location.href=url;
+        go(url) {
+            this.showUserDrop = false;
+            location.href = url;
             //location.href="/#/Visit/?uid="+this.uid;
         },
         //打开用户菜单
@@ -204,13 +214,14 @@ export default {
                         this.username = response.data.Username;
                         if (response.data.headImg != null)
                             this.headImg = response.data.headImg;
+                        this.checkServerLogin=true;
                         //获取未读通知数
                         this.getUnreadNum();
                     } else {
                         storge.clear();
-                        this.uid=null;
-                        this.username=null;
-                        this.headImg=null;
+                        this.uid = null;
+                        this.username = null;
+                        this.headImg = null;
                     }
                     this.$emit("getInfo", response.data);
                 })
@@ -220,6 +231,7 @@ export default {
         },
         //获取未读通知数
         getUnreadNum() {
+            console.log(this.father+":HeadNav-getUnreadNUm...");
             axios
                 .post("/api/getAllUnReadCount")
                 .then(response => {
@@ -332,6 +344,9 @@ export default {
     position: fixed;
     width: 100vw;
     height: 100vh;
+    top:0;
+    left: 0;
+    z-index: 9998;
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -343,8 +358,7 @@ export default {
     width: 70vw;
     height: 100vh;
     overflow: auto;
-    z-index: 100;
-    border-radius: 5px;
+    z-index: 9999;
     /* padding: 10px; */
     background: rgb(245, 245, 245);
     font-size: 16px;
@@ -362,7 +376,8 @@ export default {
     background: rgb(220, 220, 220);
     color: rgb(205, 133, 63);
 }
-.drop-item img{
+
+.drop-item img {
     width: 25px;
     height: 25px;
     margin-right: 20px;
